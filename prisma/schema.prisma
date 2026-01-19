@@ -20,29 +20,37 @@ enum Role {
   ADMIN
 }
 
-enum category {
-  Image
-  File
+enum Category {
+  FILE
+  FOLDER
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?  @unique
-  Bio       String?
-  role      Role     @default(USER)
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?  @unique
+  Bio         String?
+  role        Role     @default(USER)
+  jabatanId   String
+  jabatan     Jabatan  @relation(fields: [jabatanId], references: [id])
   driveFolder DriveObj[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model DriveObj {
   id        String   @id @default(cuid())
-  Link  String? 
-  Useremail    String?  @unique
-  User     User?    @relation(fields: [Useremail], references: [email])
-  category category @default(File)
+  link      String? 
+  useremail String?  @unique
+  user      User?    @relation(fields: [useremail], references: [email])
+  category  Category @default(FOLDER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Jabatan {
+  id   String @id @default(cuid())
+  title String 
+  user User[]
 }
 
