@@ -29,11 +29,12 @@ model User {
   id          String   @id @default(cuid())
   email       String   @unique
   name        String?  @unique
-  Bio         String?
+  bio         String?
   role        Role     @default(USER)
   jabatanId   String
   jabatan     Jabatan  @relation(fields: [jabatanId], references: [id])
   driveFolder DriveObj[]
+  mengajar    Mengajar[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -54,3 +55,33 @@ model Jabatan {
   user User[]
 }
 
+model Mengajar{
+  id String @id @default(cuid())
+  idUser String 
+  idKelas String 
+  idMapel String
+
+  user User @relation(fields: [idUser], references: [id])
+  kelas Kelas @relation(fields: [idKelas], references: [id])
+  mapel Mapel @relation(fields: [idMapel], references: [id])
+
+  createdAt DateTime @default(now())
+  
+  @@unique([idUser, idKelas, idMapel])
+}
+
+model Kelas {
+  id String @id @default(cuid())
+  nama String @unique
+  mengajar Mengajar[]
+  updatedAt DateTime @default(now())
+  createdAt DateTime @updatedAt
+}
+
+model Mapel{
+  id String @id @default(cuid())
+  nama String @unique
+  mengajar Mengajar[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
