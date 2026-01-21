@@ -1,6 +1,5 @@
 import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
 import { flaterr, JABATAN_BY_ADMIN } from "@/lib/authschema";
-import { pagination } from "@/lib/pagination";
 import prisma from "@/lib/prisma";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
