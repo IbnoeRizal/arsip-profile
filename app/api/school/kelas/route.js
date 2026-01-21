@@ -38,12 +38,10 @@ export async function GET(request) {
         return NextResponse.json({data:kelass},{status:st2xx.ok});
 
     }catch(e){
-        const autErr = authError(e);
-        if(autErr)
-            return autErr;
-
+        const knownErr = authError(e)?? prismaError(e);
+        if(knownErr) return knownErr;
         console.error(e);
-        return prismaError(e)?? NextResponse.json({data:"internal server error"},{status:st5xx.internalServerError});
+        return NextResponse.json({data:"internal server error"},{status:st5xx.internalServerError});
     }
 }
 
@@ -75,12 +73,10 @@ export async function POST(request) {
         return NextResponse.json({data:kelas},{status:st2xx.created});
 
     }catch(e){
-        const autErr = authError(e);
-        if(autErr)
-            return autErr;
-
+        const knownErr = authError(e)?? prismaError(e);
+        if(knownErr) return knownErr;
         console.error(e);
-        return prismaError(e)?? NextResponse.json({data:"internal server error"},{status:st5xx.internalServerError});
+        return NextResponse.json({data:"internal server error"},{status:st5xx.internalServerError});
     }
 }
 
@@ -115,11 +111,9 @@ export async function DELETE(request) {
         return NextResponse.json({data:kelas},{status:st2xx.ok});
 
     }catch(e){
-        const autErr = authError(e);
-        if(autErr)
-            return autErr;
-
+        const knownErr = authError(e)?? prismaError(e);
+        if(knownErr) return knownErr;
         console.error(e);
-        return prismaError(e)?? NextResponse.json({data:"internal server error"},{status:st5xx.internalServerError});
+        return NextResponse.json({data:"internal server error"},{status:st5xx.internalServerError});
     }
 }
