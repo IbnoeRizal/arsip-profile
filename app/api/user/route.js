@@ -5,7 +5,7 @@ import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { requireRole, getUserFromRequest, authError } from "@/lib/auth";
 import { Role } from "@prisma/client";
-import { flaterr, USER_CREATE_BY_ADMIN } from "@/lib/authschema";
+import { flaterr, USER_CREATE_BY_ADMIN, USER_DELETE_BY_ADMIN } from "@/lib/authschema";
 import { hasherpass } from "@/lib/hashpass";
 
 /**
@@ -109,6 +109,40 @@ export async function POST(request) {
         if(autherr)
             return autherr;
 
+        console.error(e);
+        return prismaError(e)?? NextResponse.json({data:"internal server error"},{status:st5xx.internalServerError});
+    }
+}
+
+/**
+ * @param {import("next/server").NextRequest} request 
+ * @returns {NextResponse}
+ */
+export async function DELETE(request) {
+    const payload = await getUserFromRequest(request);
+
+    try{
+        requireRole(payload,[Role.ADMIN]);
+        const rawdata = await request.json();
+        const validated = USER_DELETE_BY_ADMIN.safeParse(rawdata);
+
+        if(!validated.success)
+            return NextResponse.json({data:flaterr(validated.error)},{status:st4xx.badRequest});
+
+        const user = prisma.user.delete({
+            where: validated.data,
+            select:{
+                id:true
+            }
+        });
+
+        return NextResponse.json({data:user},{status:st2xx.ok});
+
+    }catch(e){
+        const autErr = authError(e);
+        if (autErr)
+            return autErr;
+        
         console.error(e);
         return prismaError(e)?? NextResponse.json({data:"internal server error"},{status:st5xx.internalServerError});
     }
