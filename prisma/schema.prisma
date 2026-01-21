@@ -31,8 +31,8 @@ model User {
   name        String   
   bio         String?
   role        Role     @default(USER)
-  jabatanId   String
-  jabatan     Jabatan  @relation(fields: [jabatanId], references: [id])
+  jabatanId   String?
+  jabatan     Jabatan?  @relation(fields: [jabatanId], references: [id],onDelete: SetNull, onUpdate: SetNull)
   driveObj    DriveObj[]
   mengajar    Mengajar[]
   password    String
@@ -44,7 +44,7 @@ model DriveObj {
   id        String   @id @default(cuid())
   link      String 
   useremail String?  @unique
-  user      User?    @relation(fields: [useremail], references: [email])
+  user      User?    @relation(fields: [useremail], references: [email],onDelete: SetNull, onUpdate: SetNull)
   category  Category @default(FOLDER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -62,9 +62,9 @@ model Mengajar{
   idKelas String 
   idMapel String
 
-  user User @relation(fields: [idUser], references: [id])
-  kelas Kelas @relation(fields: [idKelas], references: [id])
-  mapel Mapel @relation(fields: [idMapel], references: [id])
+  user User @relation(fields: [idUser], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  kelas Kelas @relation(fields: [idKelas], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  mapel Mapel @relation(fields: [idMapel], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now())
   
@@ -83,6 +83,24 @@ model Mapel{
   id String @id @default(cuid())
   nama String @unique
   mengajar Mengajar[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Visi{
+  id String @id @default(cuid())
+  vision String
+  misi Misi[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Misi{
+  id String @id @default(cuid())
+  order Int @default(autoincrement())
+  mision String
+  idVisi String
+  visi Visi @relation(fields: [idVisi], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
