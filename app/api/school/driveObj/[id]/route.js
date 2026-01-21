@@ -13,12 +13,14 @@ import { NextResponse } from "next/server";
  * @returns {NextResponse}
  */
 export async function PATCH(request,context) {
-    const payload = await getUserFromRequest(request);
-    const {id} = await context.params
-
     try{
+        const [payload,{id},rawdata] = await Promise.all([
+            getUserFromRequest(request),
+            context.params,
+            request.json()
+        ]);
+
         requireRole(payload,[Role.ADMIN]);
-        const rawdata = await request.json();
         const validated = DRIVEOBJ_UPDATE_BY_ADMIN.safeParse(rawdata);
 
         if(!validated.success)
