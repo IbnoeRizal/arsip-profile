@@ -14,10 +14,10 @@ import { hasherpass } from "@/lib/hashpass";
  * @returns {NextResponse}
  */
 export async function GET(request,context) {
-    const id = (await context.params).id
+    const {id} = await context.params
     try{
         const user = await prisma.user.findUniqueOrThrow({
-            where:{id:id},
+            where:{id},
             select:{
                 name:true,
                 email:true,
@@ -57,17 +57,16 @@ export async function GET(request,context) {
  * @returns {NextResponse}
  */
 export async function PATCH(request,context) {
-    const id = (await context.params).id;
-    const payload = await getUserFromRequest(request)
-    
-    
     try{
-        requireRole(payload,[Role.ADMIN,Role.USER]);
+        const [payload,{id},rawdata] = await Promise.all([
+            getUserFromRequest(request),
+            context.params,
+            request.json()
+        ]);
 
-        const rawdata = await request.json();
-        const validated = payload.role === Role.ADMIN? 
-            USER_PATCH_BY_ADMIN.safeParse(rawdata): 
-            USER_PATCH_BY_USER.safeParse(rawdata);
+        requireRole(payload,[Role.ADMIN]);
+
+        const validated = USER_PATCH_BY_ADMIN.safeParse(rawdata);
     
         if(!validated.success)
             return NextResponse.json({data:flaterr(validated.error)},{status:st4xx.badRequest});
