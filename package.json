@@ -7,7 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db-local:look" : "dotenv -e .env.local -- prisma studio",
+    "db-prod:look" : "dotenv -e .env -- prisma studio"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
