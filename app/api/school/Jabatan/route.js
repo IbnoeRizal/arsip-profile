@@ -12,11 +12,13 @@ import { NextResponse } from "next/server";
  * @returns {NextResponse}
  */
 export async function GET(request) {
-    const payload = await getUserFromRequest(request);
-
     try{
-        requireRole(payload, Role.ADMIN);
-        const {page,limit} = pagination(request);
+        const [payload,{page,limit}] = await Promise.all([
+            getUserFromRequest(request),
+            pagination(request)
+        ]);
+
+        requireRole(payload, [Role.ADMIN]);
 
         const jabatans = await Promise.all([
             prisma.jabatan.findMany({
@@ -47,11 +49,13 @@ export async function GET(request) {
  * @returns {NextResponse}
  */
 export async function POST(request) {
-    const payload = await getUserFromRequest(request);
-
     try{
-        requireRole(payload, Role.ADMIN);
-        const rawdata = await request.json();
+        const [payload, rawdata] = await Promise.all([
+            getUserFromRequest(request),
+            request.json()
+        ]);
+
+        requireRole(payload, [Role.ADMIN]);
         const validated = JABATAN_BY_ADMIN.safeParse(rawdata);
 
         if(!validated.success)
@@ -82,11 +86,13 @@ export async function POST(request) {
  * @returns {NextResponse}
  */
 export async function DELETE(request) {
-    const payload = await getUserFromRequest(request);
-
     try{
-        requireRole(payload, Role.ADMIN);
-        const rawdata = await request.json();
+        const [payload, rawdata] = await Promise.all([
+            getUserFromRequest(request),
+            request.json()
+        ])
+        
+        requireRole(payload, [Role.ADMIN]);
         const validated = JABATAN_DELETE_BY_ADMIN.safeParse(rawdata);
 
         if(!validated.success)
