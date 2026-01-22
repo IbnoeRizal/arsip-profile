@@ -76,7 +76,7 @@ export async function POST(request) {
         if(datahashed.password)
             datahashed.password = await hasherpass(datahashed.password);
 
-        const user = prisma.user.create({
+        const user = await prisma.user.create({
             data:datahashed,
             select:{
                 id:true,
