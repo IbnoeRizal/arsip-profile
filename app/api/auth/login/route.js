@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { Role } from "@prisma/client";
 import { flaterr, USER_LOGIN } from "@/lib/authschema";
-import { st2xx, st4xx } from "@/lib/responseCode";
+import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { verifyhashpass } from "@/lib/hashpass";
 import { getToken } from "@/lib/auth";
 import { prismaError } from "@/lib/prismaErrorResponse";
@@ -21,7 +21,7 @@ export async function POST(request) {
             return NextResponse.json({data:flaterr(validate.error)},{status:st4xx.badRequest});
 
         const user = await prisma.user.findUniqueOrThrow({
-            where:validate.data.email,
+            where:{email:validate.data.email},
             select:{
                 id:true,
                 role:true,
@@ -34,8 +34,12 @@ export async function POST(request) {
             NextResponse.json({data: "password salah"},{status:st4xx.notFound});
 
     }catch(e){
-        console.log(e);
-        return prismaError(e)?? NextResponse.json({message:"internal server error"},{status:st2xx.ok});
+        const knownErr = prismaError(e);
+        if(knownErr)
+            return knownErr;
+        
+        console.error(e);
+        return NextResponse.json({data:"internal server error"},{status:st5xx.internalServerError});
     }
 }
 
