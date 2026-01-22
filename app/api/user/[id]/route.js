@@ -43,7 +43,7 @@ export async function GET(request,context) {
                 },
             }
         });
-        return NextResponse.json({data:user, err:null},{status:st2xx.ok});
+        return NextResponse.json({data:user},{status:st2xx.ok});
     }catch(e){
         console.error(e);
         return prismaError(e)?? NextResponse.json({data:"internal server error"},{status:st5xx.internalServerError});
