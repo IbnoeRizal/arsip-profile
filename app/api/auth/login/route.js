@@ -31,7 +31,7 @@ export async function POST(request) {
 
         return await verifyhashpass(validate.data.password, user.password)? 
             NextResponse.json({data: await getToken({id:user.id, role:user.role})},{status:st2xx.ok}):
-            NextResponse.json({data: "password salah"},{status:st4xx.notFound});
+            NextResponse.json({data: "data tidak ditemukan"},{status:st4xx.notFound});
 
     }catch(e){
         const knownErr = prismaError(e);
