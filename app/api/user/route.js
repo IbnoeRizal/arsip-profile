@@ -10,7 +10,7 @@ import { hasherpass } from "@/lib/hashpass";
 
 /**
  * @param {import("next/server").NextRequest} request 
- * @returns {NextResponse}
+ * @returns {Promise<NextResponse>}
  */
 export async function GET(request) {
     const {page,limit} = pagination(request);
@@ -58,7 +58,7 @@ export async function GET(request) {
 
 /**
  * @param {import("next/server").NextRequest} request 
- * @returns {NextResponse}
+ * @returns {Promise<NextResponse>}
  */
 export async function POST(request) {
     const payload = await getUserFromRequest(request);
@@ -116,7 +116,7 @@ export async function POST(request) {
 
 /**
  * @param {import("next/server").NextRequest} request 
- * @returns {NextResponse}
+ * @returns {Promise<NextResponse>}
  */
 export async function DELETE(request) {
     const payload = await getUserFromRequest(request);

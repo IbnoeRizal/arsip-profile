@@ -9,7 +9,7 @@ import { prismaError } from "@/lib/prismaErrorResponse";
 
 /**
  * @param {import("next/server").NextRequest} request 
- * @returns {NextResponse}
+ * @returns {Promise<NextResponse>}
  */
 export async function POST(request) {
     try{

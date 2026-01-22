@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
 
 /**
  * @param {import("next/server").NextRequest} request 
- * @returns {NextResponse}
+ * @returns {Promise<NextResponse>}
  */
 export async function GET(request) {
     try{
@@ -47,7 +47,7 @@ export async function GET(request) {
 
 /**
  * @param {import("next/server").NextRequest} request 
- * @returns {NextResponse}
+ * @returns {Promise<NextResponse>}
  */
 export async function POST(request) {
     try{
@@ -84,7 +84,7 @@ export async function POST(request) {
 
 /**
  * @param {import("next/server").NextRequest} request 
- * @returns {NextResponse}
+ * @returns {Promise<NextResponse>}
  */
 export async function DELETE(request) {
     try{

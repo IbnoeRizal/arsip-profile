@@ -10,7 +10,7 @@ import { NextResponse } from "next/server";
 /**
  * @param {import("next/server").NextRequest} request 
  * @param {{params:{id:string}}} context
- * @returns {NextResponse}
+ * @returns {Promise<NextResponse>}
  */
 export async function PATCH(request,context) {
     try{

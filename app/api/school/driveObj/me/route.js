@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
 /**
  * 
  * @param {import("next/server").NextRequest} request 
- * @returns {NextResponse}
+ * @returns {Promise<NextResponse>}
  */
 export async function GET(request) {
     const payload = await getUserFromRequest(request);

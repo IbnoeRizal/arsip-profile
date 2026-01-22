@@ -9,7 +9,7 @@ import { hasherpass } from "@/lib/hashpass";
 
 /**
  * @param {import("next/server").NextRequest} request
- * @returns {NextResponse}
+ * @returns {Promise<NextResponse>}
  */
 export async function PATCH(request) {
     try{

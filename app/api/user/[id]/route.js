@@ -11,7 +11,7 @@ import { hasherpass } from "@/lib/hashpass";
 /**
  * @param {import("next/server").NextRequest} request 
  * @param {{params:{id:string}}} context 
- * @returns {NextResponse}
+ * @returns {Promise<NextResponse>}
  */
 export async function GET(request,context) {
     const {id} = await context.params
@@ -54,7 +54,7 @@ export async function GET(request,context) {
 /**
  * @param {import("next/server").NextRequest} request 
  * @param {{params:{id:string}}} context 
- * @returns {NextResponse}
+ * @returns {Promise<NextResponse>}
  */
 export async function PATCH(request,context) {
     try{
