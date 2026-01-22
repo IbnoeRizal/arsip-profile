@@ -1,5 +1,5 @@
 import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
-import { flaterr, KELAS_CREATE_BY_ADMIN, KELAS_DELETE_BY_ADMIN, MAPEL_CREATE_BY_ADMIN, MAPEL_DELETE_BY_ADMIN } from "@/lib/authschema";
+import { flaterr, MAPEL_CREATE_BY_ADMIN, MAPEL_DELETE_BY_ADMIN } from "@/lib/authschema";
 import { pagination } from "@/lib/pagination";
 import prisma from "@/lib/prisma";
 import { prismaError } from "@/lib/prismaErrorResponse";
