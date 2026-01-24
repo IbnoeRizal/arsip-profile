@@ -9,13 +9,13 @@
     "start": "next start",
     "lint": "eslint",
     "db-local:look": "dotenv -e .env.local -- prisma studio",
-    "db-prod:look": "dotenv -e .env -- prisma studio"
+    "db-prod:look": "dotenv -e .env -- prisma studio",
+    "db-local:seed": "node ./prisma/seed.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^6.19.2",
     "bcryptjs": "^3.0.3",
-    "googleapis": "^170.1.0",
     "jose": "^6.1.3",
     "lucide-react": "^0.562.0",
     "motion": "^12.27.0",
@@ -26,6 +26,7 @@
     "zod": "^4.3.5"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.2.0",
     "@tailwindcss/postcss": "^4",
     "babel-plugin-react-compiler": "1.0.0",
     "dotenv-cli": "^11.0.0",
