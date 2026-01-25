@@ -21,7 +21,7 @@ enum Role {
 }
 
 enum Category {
-  FILE
+  POFILEPIC
   FOLDER
 }
 
