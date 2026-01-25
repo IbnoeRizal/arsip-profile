@@ -68,9 +68,9 @@ async function seed(){
 }
 
 try{
-    seed();
+    await seed();
 }catch(e){
     console.error(e);
 }finally{
-    prisma.$disconnect();
+    await prisma.$disconnect();
 }
