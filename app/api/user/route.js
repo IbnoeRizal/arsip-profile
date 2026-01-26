@@ -25,20 +25,6 @@ export async function GET(request) {
                         select:{
                             title:true
                         }
-                    },
-                    mengajar:{
-                        select:{
-                            kelas:{
-                                select:{
-                                    nama:true
-                                }
-                            },
-                            mapel:{
-                                select:{
-                                    nama:true
-                                }
-                            }
-                        }
                     }
                 },
                 take: limit,
@@ -86,20 +72,6 @@ export async function POST(request) {
                         title:true
                     }
                 },
-                mengajar:{
-                    select:{
-                        kelas:{
-                            select:{
-                                nama:true
-                            }
-                        },
-                        mapel:{
-                            select:{
-                                nama:true
-                            }
-                        }
-                    }
-                }
             }
         });
 
