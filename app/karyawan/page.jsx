@@ -3,8 +3,8 @@
 import { useEffect, useState, Suspense, useRef } from "react";
 import ProfilePic from "@/components/profilepic";
 import ThemeButton from "@/components/button";
-import { ArrowBigRight, ArrowBigLeft, AlertCircle } from "lucide-react";
-import Err from "@/components/error";
+import { ArrowBigRight, ArrowBigLeft } from "lucide-react";
+import Status from "@/components/status";
 
 export default function Karyawan(props) {
     const [display, setDisplay] = useState({
@@ -18,8 +18,9 @@ export default function Karyawan(props) {
         users: [],
         total: 0
     });
-    const [error, setError] = useState({
-        message: "",
+
+    const status = useRef({
+        message:"",
         code: 0
     });
 
@@ -49,27 +50,25 @@ export default function Karyawan(props) {
                     users: result.data[0],
                     total: result.data[1]
                 }));
+                status.current.message = res.statusText;
+                status.current.code = res.status;
             } else {
-                setError({
-                    message: result.data,
-                    code: res.status
-                })
+                status.current.message = result.data;
+                status.current.code = res.status;
             }
         }
         getKaryawan();
 
     }, [display.page]);
 
-    if (error.code >= 400) {
-        return <Err {...error}/>
-    }
     return (
         <div className="flex flex-col justify-center items-center mt-20">
-            <div className="w-full flex flex-row justify-end text-white sticky top-1 z-0 gap-2">
+            <Status {...status.current}/>
+            <div className="w-fit self-end flex flex-row justify-end text-white sticky top-1 z-0 gap-2 *:cursor-pointer">
                 <ThemeButton fun={handlePrev} text={(<ArrowBigLeft></ArrowBigLeft>)}/>
                 <ThemeButton fun={handleNext} text={(<ArrowBigRight></ArrowBigRight>)}/>
             </div>
-            <div className="container flex flex-col gap-4 p-2 *:rounded-md *:hover:border-blue-200 *:border-background *:border">
+            <div className="container flex flex-col gap-4 p-2 *:rounded-md dark:*:hover:border-blue-200 *:hover:border-red-200 *:border-background *:border">
                 {data.users.map((user) => (
                     <div
                         key={user.id}
