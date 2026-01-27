@@ -5,7 +5,7 @@ import {motion, useMotionValueEvent, useScroll} from "motion/react";
 
 export default function Navbar(props) {
   const{scrollY} = useScroll();
-  const[dirscroll,setDirScroll] = useState("down");
+  const[dirscroll,setDirScroll] = useState("up");
 
   const timeoutRef = useRef(null);
 

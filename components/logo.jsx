@@ -2,7 +2,7 @@
 import { motion } from "motion/react";
 import Image from "next/image";
 
-export function Logo(props){
+export function Logo({width, height, src, alt}){
     return(
         <>
             <motion.div
@@ -12,10 +12,10 @@ export function Logo(props){
                 whileHover={{scale: 1.6 }}
             >
                 <Image
-                src="/Logo-Sekolah.svg"
-                alt="Logo Sekolah"
-                width={props.width??80}
-                height={props.height??80}
+                src={src}
+                alt={alt}
+                width={width??80}
+                height={height??80}
                 priority
                 />
             </motion.div>
