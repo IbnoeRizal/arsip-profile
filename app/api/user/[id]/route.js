@@ -1,22 +1,15 @@
 import prisma from "@/lib/prisma";
-import { flaterr, USER_PATCH_BY_ADMIN, USER_PATCH_BY_USER } from "@/lib/authschema";
+import { flaterr, USER_PATCH_BY_ADMIN } from "@/lib/authschema";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { NextResponse } from "next/server";
 import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { Role } from "@prisma/client";
 import { hasherpass } from "@/lib/hashpass";
+import { unstable_cache } from "next/cache";
 
-
-/**
- * @param {import("next/server").NextRequest} request 
- * @param {{params:{id:string}}} context 
- * @returns {Promise<NextResponse>}
- */
-export async function GET(request,context) {
-    const {id} = await context.params
-    try{
-        const user = await prisma.user.findUniqueOrThrow({
+const cached = unstable_cache(async(id)=>{
+        return await prisma.user.findUniqueOrThrow({
             where:{id},
             select:{
                 name:true,
@@ -42,7 +35,20 @@ export async function GET(request,context) {
                     }
                 },
             }
-        });
+        })
+    },["get-user-byId"],
+    {revalidate:300}
+)
+
+/**
+ * @param {import("next/server").NextRequest} request 
+ * @param {{params:{id:string}}} context 
+ * @returns {Promise<NextResponse>}
+ */
+export async function GET(request,context) {
+    const {id} = await context.params
+    try{
+        const user = await cached(id);
         return NextResponse.json({data:user},{status:st2xx.ok});
     }catch(e){
         console.error(e);
