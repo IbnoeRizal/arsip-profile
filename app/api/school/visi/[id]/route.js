@@ -8,7 +8,7 @@ import { NextResponse } from "next/server";
 
 /**
  * @param {import("next/server").NextRequest} request 
- * @param {{params:{id:string}}} context
+ * @param {{params:Promise<{id:string}>}} context
  * @returns {Promise<NextResponse>} 
  */
 export async function POST(request,context) {

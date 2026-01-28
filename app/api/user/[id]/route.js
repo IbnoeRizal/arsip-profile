@@ -42,7 +42,7 @@ const cached = unstable_cache(async(id)=>{
 
 /**
  * @param {import("next/server").NextRequest} request 
- * @param {{params:{id:string}}} context 
+ * @param {{params:Promise<{id:string}>}} context 
  * @returns {Promise<NextResponse>}
  */
 export async function GET(request,context) {
@@ -59,7 +59,7 @@ export async function GET(request,context) {
 
 /**
  * @param {import("next/server").NextRequest} request 
- * @param {{params:{id:string}}} context 
+ * @param {{params:Promise<{id:string}>}} context 
  * @returns {Promise<NextResponse>}
  */
 export async function PATCH(request,context) {
