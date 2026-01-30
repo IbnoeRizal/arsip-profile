@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/navbar";
+import { BoundaryProvider } from "./boundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,8 +23,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased overscroll-x-none`}
       >
-        <Navbar links={["/karyawan",]}/>
-        {children}
+        <BoundaryProvider>
+          {children}
+        </BoundaryProvider>
       </body>
     </html>
   );
