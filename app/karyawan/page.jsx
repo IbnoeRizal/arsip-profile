@@ -5,8 +5,13 @@ import ProfilePic from "@/components/profilepic";
 import ThemeButton from "@/components/button";
 import { ArrowBigRight, ArrowBigLeft } from "lucide-react";
 import Status from "@/components/status";
+import Loader from "@/components/loading";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Karyawan(props) {
+    const router = useRouter();
+    const pathname = usePathname();
+
     const [display, setDisplay] = useState({
         page: 1,
         limit: 15
@@ -24,6 +29,8 @@ export default function Karyawan(props) {
         code: 0
     });
 
+    const [loading, setLoading] = useState(true);
+
     function handleNext(e) {
         e.stopPropagation();
         if (display.page * display.limit < data.total)
@@ -39,27 +46,54 @@ export default function Karyawan(props) {
                 { ...prev, page: prev.page - 1 }
             ));
     }
-    useEffect(() => {
-        async function getKaryawan() {
-            const res = await fetch(`/api/user/?page=${display.page}&limit=${display.limit}`);
-            const result = await res.json();
 
-            if (res.ok && Array.isArray(result?.data)) {
-                setData(prev => ({
-                    ...prev,
-                    users: result.data[0],
-                    total: result.data[1]
-                }));
-                status.current.message = res.statusText;
-                status.current.code = res.status;
-            } else {
-                status.current.message = result.data;
-                status.current.code = res.status;
+    /**
+     * @param {string} id 
+     */
+    function userId(id){
+        router.push(pathname+"/"+id);
+    }
+
+    useEffect(() => {
+        const controller = new AbortController();
+        async function getKaryawan() {
+            try{
+                setLoading(true)
+                const res = await fetch(`/api/user/?page=${display.page}&limit=${display.limit}`,{signal:controller.signal});
+                const result = await res.json();
+    
+                if (res.ok && Array.isArray(result?.data)) {
+                    setData(prev => ({
+                        ...prev,
+                        users: result.data[0],
+                        total: result.data[1]
+                    }));
+                    status.current.message = res.statusText;
+                    status.current.code = res.status;
+                } else {
+                    status.current.message = result.data;
+                    status.current.code = res.status;
+                }
+
+            }catch(e){
+                if (e.name !== "AbortError") console.error(e);
+            }finally{
+                setLoading(false);
             }
         }
         getKaryawan();
 
+        return () => controller.abort();
+
     }, [display.page]);
+
+    if(loading)
+        return(
+            <div className="fixed inset-0 flex items-center justify-center">
+                <Status {...status.current}/>
+                <Loader/>
+            </div>
+        )
 
     return (
         <div className="flex flex-col justify-center items-center mt-20">
@@ -72,9 +106,10 @@ export default function Karyawan(props) {
                 {data.users.map((user) => (
                     <div
                         key={user.id}
-                        className="flex items-center flex-row bg-inherit gap-2"
+                        className="flex items-center flex-row bg-inherit gap-2 active:dark:bg-blue-400 active:bg-red-400"
+                        onClick={()=>userId(user.id)}
                     >
-                        <ProfilePic id={user.id}/>
+                        <ProfilePic id={user.id} w={35} h={35}/>
                         <div className="flex justify-between flex-1">
                             <div className="flex flex-col">
                                 <span className="text-sm text-gray-500">Nama</span>
