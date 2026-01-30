@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Status from "../status";
+import { useRouter} from "next/navigation";
+import DynamicForm from "./dynamicform";
 
 /**
  * @param {string} email
@@ -21,10 +23,7 @@ const sendCredential = async (email, password, signal) => {
 };
 
 export default function Login() {
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-  });
+  const router = useRouter();
 
   const [respond, setRespond] = useState({
     /** @type {string | object} */
@@ -35,28 +34,18 @@ export default function Login() {
   const controllerRef = useRef(null);
   const timerRef = useRef(null);
 
-  
-  // HANDLE INPUT
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData((prev) => ({ ...prev, [name]: value }));
-  };
 
-  
   // HANDLE SUBMIT (INTI)
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // batalkan request sebelumnya
+  const handleSubmit = async (data) => {
+    
     controllerRef.current?.abort();
-    const controller = new AbortController();
-    controllerRef.current = controller;
+    controllerRef.current = new AbortController();
 
     try {
       const result = await sendCredential(
         data.email,
         data.password,
-        controller.signal
+        controllerRef?.current?.signal
       );
 
       const body = await result.json();
@@ -73,7 +62,7 @@ export default function Login() {
   useEffect(() => {
     if (respond.code === 200) {
       timerRef.current = setTimeout(() => {
-        window.location.reload();
+        router.refresh();
       }, 1000);
     }
 
@@ -84,37 +73,24 @@ export default function Login() {
   }, [respond.code]);
 
   return (
-    <>
-      <Status {...respond} manual={true} />
-
-      <div className="container flex justify-center dark:brightness-150 brightness-95">
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-2 w-80"
-        >
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            value={data.email}
-            onChange={handleChange}
-            required
-          />
-
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            value={data.password}
-            onChange={handleChange}
-            required
-          />
-
-          <button type="submit">Ok</button>
-        </form>
-      </div>
-    </>
+    <div className="w-fit flex justify-center items-center border-dotted border p-4 rounded-md">
+      <Status {...respond} manual={true}/>
+      <DynamicForm onSubmit={handleSubmit} fields={[
+        {
+          label:"Email",
+          name:"email",
+          as:"input",
+          type:"email",
+          parse:(x)=>String(x)
+        },
+        {
+          label: "Password",
+          name:"password",
+          as: "input",
+          type:"password",
+          parse:(x)=>String(x),
+        }
+      ]}/>
+    </div>
   );
 }
