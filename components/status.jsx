@@ -1,7 +1,8 @@
 "use client"
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Info, XSquareIcon} from "lucide-react"
 import { motion } from "motion/react";
+import { BoundContext } from "@/app/boundary"
 
 /**
  * 
@@ -9,6 +10,11 @@ import { motion } from "motion/react";
  * @returns {import("react/jsx-dev-runtime").JSXSource}
  */
 export default function Status({message, code, manual = false}){
+    const boundary = useContext(BoundContext);
+
+    if(!boundary)
+        return null;
+
     const [visible, setVisible] = useState(false);
 
     useEffect(()=>{
@@ -20,7 +26,7 @@ export default function Status({message, code, manual = false}){
 
         const x = setTimeout(()=>{
             setVisible(false);
-        },2000)
+        },1500)
 
         return ()=>clearTimeout(x);
     },[code]);
@@ -68,7 +74,7 @@ export default function Status({message, code, manual = false}){
     };
 
 
-    let messages = [];
+    const messages = [];
 
     /**@type {{box: string, title: string, text: string, code: string, stroke:string}} */
     const c = colorMap[color] ?? colorMap.green;
@@ -91,7 +97,7 @@ export default function Status({message, code, manual = false}){
     }
     
     return (
-        <motion.div className="flex min-h-50 flex-row-reverse w-fit items-center justify-center fixed top-[30%]" drag dragMomentum={false} dragConstraints >
+        <motion.div className="flex min-h-50 flex-row-reverse w-fit items-center justify-center fixed top-[20%]" drag dragMomentum={true} dragConstraints={boundary} >
             <XSquareIcon 
                 className={`${colorMap.red.stroke} self-start cursor-pointer`} 
                 onClick={
@@ -104,7 +110,7 @@ export default function Status({message, code, manual = false}){
             <div className={`flex flex-col justify-between items-center rounded-md border ${c.box} px-6 py-4 text-center`}>
                 <Info className={`size-9 animate-pulse ${c.stroke}`}/>
                 <h2 className={`text-lg font-semibold ${c.title}`}>
-                    {messages.length? "Messages" : "Message"}
+                    {messages.length > 1? "Messages" : "Message"}
                 </h2>
                 {
                     messages.length? 
