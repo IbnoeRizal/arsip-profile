@@ -59,8 +59,8 @@ export async function POST(request) {
 
         const datahashed = {...verivied.data};
 
-        if(datahashed.password)
-            datahashed.password = await hasherpass(datahashed.password);
+        
+        datahashed.password = await hasherpass(datahashed.password);
 
         const user = await prisma.user.create({
             data:datahashed,
