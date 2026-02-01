@@ -27,7 +27,7 @@ export default function ProfilePic({id,w=300,h=300}){
         <div className="rounded-full overflow-hidden shrink-0 ring-1 dark:ring-blue-300 ring-black/10" style={{width:w, height:h}}>
             {data.code/100 < 3 && data.text !== ""?
                 <img src={data.text} className="w-full h-full object-cover" alt="profile"></img>: 
-                <UserCircle2Icon className="mask-circle dark:stroke-blue-300" style={{width:w, height:h}}/>
+                <UserCircle2Icon className="mask-circle dark:stroke-blue-300 w-full" style={{width:w, height:h}}/>
             }
         </div>
     )  
