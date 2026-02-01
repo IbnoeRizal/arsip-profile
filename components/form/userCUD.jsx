@@ -141,10 +141,6 @@ export function UserCUD({option,id}){
 
             if(err.name !== "AbortError")
                 console.error(err);
-
-            setData(prev=>({
-
-            }))
         }finally{
             setLoading(false);
         }
