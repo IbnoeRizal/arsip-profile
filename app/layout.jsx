@@ -1,6 +1,10 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { BoundaryProvider } from "./boundary";
+import { BoundaryProvider } from "@/context/boundary";
+import { CredentialProvider } from "@/context/usercredential";
+import { getUserFromCookie } from "@/lib/auth";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,16 +21,29 @@ export const metadata = {
   description: "Home page SDN2 GEDOG",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased overscroll-x-none`}
       >
         <BoundaryProvider>
-          {children}
+          <Suspense fallback={<Loading/>}>
+            <GetCredential>
+            {children}
+            </GetCredential>
+          </Suspense>
         </BoundaryProvider>
       </body>
     </html>
   );
+}
+
+async function GetCredential({children}){
+  const payload = await getUserFromCookie();
+  return (
+    <CredentialProvider id={payload?.id} role={payload?.role}>
+      {children}
+    </CredentialProvider>
+  )
 }
