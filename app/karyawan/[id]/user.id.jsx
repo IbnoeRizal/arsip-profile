@@ -4,6 +4,10 @@ import Status from "@/components/status";
 import { useEffect, useRef, useState } from "react"
 import ProfilePic from "@/components/profilepic";
 import Loading from "./loading";
+import { useCredential } from "@/context/usercredential";
+import ThemeButton from "@/components/button";
+import {UserPenIcon}from "lucide-react"
+import { usePathname, useRouter } from "next/navigation";
 
 export default function GetUserInfo({id}){
 
@@ -103,24 +107,31 @@ export default function GetUserInfo({id}){
  * @returns {import("react").JSX.Element}
  */
 function User({id,name,email,bio,jabatan,mengajar}){
+    const route = useRouter();
+    const path = usePathname();
+    const userCredential = useCredential();
+    const can_edit = userCredential?.id === id || userCredential?.role === "ADMIN";
     return (
+        <>
         <div
             key={id}
-            className="w-full bg-white dark:bg-background rounded-2xl p-6 flex flex-col md:flex-row gap-6"
-        >
-            
-            <div
-                id="profile-pic"
-                className="flex justify-center md:w-1/4"
+            className="w-full bg-white dark:bg-background rounded-2xl p-6 flex flex-col md:flex-row gap-8"
             >
-                <ProfilePic id={id} />
+            
+            <div className="flex justify-center md:w-1/4">
+                <div className="size-fit flex grow-o last:items-end">
+                    <ProfilePic id={id} h={200} w={200}/>
+                    <div className="flex flex-row grow-0 items-end justify-center">
+                        {can_edit && <ThemeButton text={<UserPenIcon width={20} height={20}/>} fun={()=>route.push(path+"/edit")}/>} 
+                    </div>
+                </div>
             </div>
 
            
             <div
                 id="identity"
                 className="flex flex-col gap-4 md:w-2/4"
-            >
+                >
             <div className="space-y-1">
                 <span className="block text-xs uppercase tracking-wide text-slate-500">
                 Nama
@@ -161,7 +172,7 @@ function User({id,name,email,bio,jabatan,mengajar}){
             <div
                 id="mengajar"
                 className="md:w-1/4 flex flex-col gap-3"
-            >
+                >
             <span className="text-xs uppercase tracking-wide text-slate-500">
                 Mengajar
             </span>
@@ -176,9 +187,9 @@ function User({id,name,email,bio,jabatan,mengajar}){
                 <div
                 key={`${kelas.nama}-${mapel.nama}`}
                 className="border border-slate-200 dark:border-slate-700
-                            rounded-lg p-3
-                            hover:bg-slate-50 dark:hover:bg-slate-800
-                            transition-colors"
+                rounded-lg p-3
+                hover:bg-slate-50 dark:hover:bg-slate-800
+                transition-colors"
                 >
                 <div className="flex justify-between text-sm">
                     <span className="text-slate-500">Kelas</span>
@@ -193,6 +204,7 @@ function User({id,name,email,bio,jabatan,mengajar}){
             ))}
             </div>
         </div>
+        </>
     );
 
 }
