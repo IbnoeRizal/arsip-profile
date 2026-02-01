@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Info, XSquareIcon} from "lucide-react"
 import { motion } from "motion/react";
-import { BoundContext } from "@/app/boundary"
+import { useBoundContext } from "@/context/boundary"
 
 /**
  * 
@@ -10,7 +10,7 @@ import { BoundContext } from "@/app/boundary"
  * @returns {import("react/jsx-dev-runtime").JSXSource}
  */
 export default function Status({message, code, manual = false}){
-    const boundary = useContext(BoundContext);
+    const boundary = useBoundContext();
 
     if(!boundary)
         return null;
@@ -121,7 +121,7 @@ export default function Status({message, code, manual = false}){
                     ) :
                     (
                         <p className={`mt-2 text-sm ${c.text}`}>
-                            {message}
+                            {typeof message === "string"? message : "no message"}
                         </p>
                     )
                 }
