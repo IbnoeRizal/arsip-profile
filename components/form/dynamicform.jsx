@@ -81,9 +81,10 @@ export default function DynamicForm({ fields, onSubmit }) {
 
     
     setData(prev => {
+      const next = {...prev};
       if(!value){
-        delete prev[field.name];
-        return prev;
+        delete next[field.name];
+        return next;
       }
 
       return{
