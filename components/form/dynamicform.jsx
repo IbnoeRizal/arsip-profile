@@ -156,8 +156,7 @@ export default function DynamicForm({ fields, onSubmit }) {
               defaultValue=""
               required={field.required ?? true}
             >
-              <option value="" disabled>
-                -- pilih --
+              <option value="">
               </option>
               {options[field.name]?.map(opt => (
                 <option key={opt.value} value={opt.value} className="bg-background active:bg-background  focus:bg-background">
