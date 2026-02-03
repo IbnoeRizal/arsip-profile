@@ -150,11 +150,11 @@ function User({id,name,email,bio,jabatan,mengajar}){
             }
 
             {visibleChild && !can_edit &&
-                <div className="flex flex-row gap-2 items-start justify-center">
-                    <motion.div className="fixed inset-0 size-fit m-auto" drag dragConstraints={boundary}>
-                        <Login/>
-                    </motion.div>
-                </div>
+      
+                <motion.div className="fixed inset-0 size-fit m-auto" drag dragConstraints={boundary}>
+                    <Login/>
+                </motion.div>
+            
             }
             
             <div
