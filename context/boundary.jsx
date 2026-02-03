@@ -13,12 +13,12 @@ export const useBoundContext = function(){
 
 export function BoundaryProvider({children}){
     const ctx = useContext(BoundContext);
+    const refboundary = useRef(null);
     if(ctx)
         return(<>
             {children}
         </>)
 
-    const refboundary = useRef(null);
 
     return(
         <div ref={refboundary} className="">
