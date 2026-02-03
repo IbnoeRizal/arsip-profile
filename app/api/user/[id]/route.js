@@ -6,7 +6,7 @@ import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { Role } from "@prisma/client";
 import { hasherpass } from "@/lib/hashpass";
-import { unstable_cache } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
 
 const cached = unstable_cache(async(id)=>{
         return await prisma.user.findUniqueOrThrow({
@@ -37,7 +37,10 @@ const cached = unstable_cache(async(id)=>{
             }
         })
     },["get-user-byId"],
-    {revalidate:300}
+    {
+        tags:[`user-by-id`],
+        revalidate:300
+    }
 )
 
 /**
@@ -115,6 +118,7 @@ export async function PATCH(request,context) {
             }
         })
 
+        revalidateTag(`user-by-id`,"max");
         return NextResponse.json({data:user},{status:st2xx.ok});
     
     }catch(e){

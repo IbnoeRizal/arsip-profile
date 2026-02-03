@@ -6,6 +6,7 @@ import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { Role } from "@prisma/client";
 import { hasherpass } from "@/lib/hashpass";
+import { revalidateTag } from "next/cache";
 
 /**
  * @param {import("next/server").NextRequest} request
@@ -66,6 +67,7 @@ export async function PATCH(request) {
             }
         })
 
+        revalidateTag(`user-by-id`);
         return NextResponse.json({data:user},{status:st2xx.ok});
     
     }catch(e){
