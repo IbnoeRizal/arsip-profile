@@ -89,6 +89,16 @@ export default function Status({message, code, manual = false}){
         }
     }
     
+    if(typeof message === "object" && message?.formErrors){
+        for(const error of message.formErrors){
+            messages.push(
+                <div key={error} className={`${c.text}`}>
+                    {error}
+                </div>
+            );
+        }
+    }
+    
     return (
         <motion.div className="flex min-h-50 flex-row-reverse w-fit items-center justify-center fixed top-[20%]" drag dragMomentum={true} dragConstraints={boundary} >
             <XSquareIcon 
