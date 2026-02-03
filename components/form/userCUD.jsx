@@ -145,7 +145,8 @@ export function UserCUD({option,id}){
             const response = await fetch(request);
             const body = await handleParseResponse(response);
 
-            status.current.message = [body.data, body, response.statusText].find(x => typeof x === "string");
+            console.table(body.data);
+            status.current.message = body.data ?? response.statusText;
             status.current.code = response.status;
 
             
