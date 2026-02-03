@@ -7,6 +7,7 @@ import { prismaError } from "@/lib/prismaErrorResponse";
 import { Role } from "@prisma/client";
 import { hasherpass } from "@/lib/hashpass";
 import { revalidateTag } from "next/cache";
+import { cached_get_by_id } from "@/lib/cache_tags_name";
 
 /**
  * @param {import("next/server").NextRequest} request
@@ -67,7 +68,7 @@ export async function PATCH(request) {
             }
         })
 
-        revalidateTag(`user-by-id`);
+        revalidateTag(cached_get_by_id,"max");
         return NextResponse.json({data:user},{status:st2xx.ok});
     
     }catch(e){

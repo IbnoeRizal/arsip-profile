@@ -8,6 +8,7 @@ import { Role } from "@prisma/client";
 import { flaterr, USER_CREATE_BY_ADMIN, USER_DELETE_BY_ADMIN } from "@/lib/authschema";
 import { hasherpass } from "@/lib/hashpass";
 import { revalidateTag } from "next/cache";
+import { cached_get_by_id } from "@/lib/cache_tags_name";
 
 /**
  * @param {import("next/server").NextRequest} request 
@@ -109,7 +110,7 @@ export async function DELETE(request) {
             }
         });
 
-         revalidateTag(`user-by-id`,"max");
+        revalidateTag(cached_get_by_id,"max");
         return NextResponse.json({data:user},{status:st2xx.ok});
 
     }catch(e){

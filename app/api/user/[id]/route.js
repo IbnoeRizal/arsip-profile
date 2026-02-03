@@ -7,6 +7,7 @@ import { prismaError } from "@/lib/prismaErrorResponse";
 import { Role } from "@prisma/client";
 import { hasherpass } from "@/lib/hashpass";
 import { revalidateTag, unstable_cache } from "next/cache";
+import { cached_get_by_id } from "@/lib/cache_tags_name";
 
 const cached = unstable_cache(async(id)=>{
         return await prisma.user.findUniqueOrThrow({
@@ -38,7 +39,7 @@ const cached = unstable_cache(async(id)=>{
         })
     },["get-user-byId"],
     {
-        tags:[`user-by-id`],
+        tags:[cached_get_by_id],
         revalidate:300
     }
 )
@@ -118,7 +119,7 @@ export async function PATCH(request,context) {
             }
         })
 
-        revalidateTag(`user-by-id`,"max");
+        revalidateTag(cached_get_by_id,"max");
         return NextResponse.json({data:user},{status:st2xx.ok});
     
     }catch(e){
