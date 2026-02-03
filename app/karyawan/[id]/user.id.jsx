@@ -111,7 +111,9 @@ function User({id,name,email,bio,jabatan,mengajar}){
     const userCredential = useCredential();
     const can_edit = userCredential?.id === id || userCredential?.role === "ADMIN";
     const [visibleChild, setVisibleChild] = useState(false);
-
+    useEffect(()=>{
+        setVisibleChild(false);
+    },[userCredential]);
     return (
         
         <div
@@ -141,10 +143,10 @@ function User({id,name,email,bio,jabatan,mengajar}){
 
            
             {visibleChild && can_edit && 
-                <motion.div className="inset-20 w-fit m-auto fixed" drag dragConstraints={boundary}>
+                <motion.div className="inset-20 size-fit m-auto fixed" drag dragConstraints={boundary}>
                     <div className="border border-dotted rounded-md p-5 flex flex-col gap-4 bg-background">
                         <h2 className="text-2xl font-bold self-center border-b-2 border-dotted"> Update </h2>
-                        <UserCUD id={id} option={"UPDATE"} />
+                        <UserCUD id={id} option={"DELETE"} />
                     </div>
                 </motion.div>
             }
