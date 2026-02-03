@@ -11,17 +11,10 @@ import { useBoundContext } from "@/context/boundary"
  */
 export default function Status({message, code, manual = false}){
     const boundary = useBoundContext();
+    const [visible, setVisible] = useState(code !== 0);
 
-    if(!boundary)
-        return null;
-
-    const [visible, setVisible] = useState(false);
 
     useEffect(()=>{
-        if(code === 0) return;
-        
-        setVisible(true);
-
         if(manual) return;
 
         const x = setTimeout(()=>{
@@ -31,7 +24,7 @@ export default function Status({message, code, manual = false}){
         return ()=>clearTimeout(x);
     },[code]);
     
-    if(!visible) return <></>;
+    if(!visible || !boundary) return <></>;
 
     let color = "";
 
