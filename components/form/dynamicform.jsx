@@ -143,9 +143,9 @@ export default function DynamicForm({ fields, onSubmit }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      {fields.map(field => (
+      {fields?.map(field => (
         <div key={field.name} className="flex flex-col gap-1">
-          <label className="font-medium" htmlFor={field.name}>{field.label}</label>
+          <label className="font-medium" htmlFor={field.name}>{`${field.label} (${(field.required?? true)? "required": "optional"})`}</label>
 
           {/* SELECT */}
           {field.as === "select" && (
