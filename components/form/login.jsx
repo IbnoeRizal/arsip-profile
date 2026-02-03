@@ -74,23 +74,27 @@ export default function Login() {
     };
   }, [respond.code]);
 
+  if(userCredential?.id)
+    return null;
+
   return (
-    <div className="w-fit flex justify-center items-center border-dotted border p-4 rounded-md">
+    <div className="w-fit flex flex-col  gap-2 justify-center items-center border-dotted border p-4 rounded-md bg-background">
       <Status {...respond} manual={true}/>
+      <h2 className="font-bold text-2xl text-shadow-md dark:text-shadow-blue-500 text-shadow-red-500 p-2">Login</h2>
       <DynamicForm onSubmit={handleSubmit} fields={[
         {
           label:"Email",
           name:"email",
           as:"input",
           type:"email",
-          parse:(x)=>String(x)
+          parse:String
         },
         {
           label: "Password",
           name:"password",
           as: "input",
           type:"password",
-          parse:(x)=>String(x),
+          parse:String,
         }
       ]}/>
     </div>
