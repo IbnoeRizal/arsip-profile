@@ -1,0 +1,21 @@
+'use client'
+import { Folder, Image } from "lucide-react";
+import Link from "next/link";
+
+export default function DriveItems({link,nama}){
+    
+    const isFile = typeof link === "string" && link.includes("folders");
+
+
+    return(
+        <Link href={link}>
+            <div className="flex flex-row justify-center items-center gap-1 text-white rounded-md p-10 dark:bg-blue-400 bg-red-400 stroke-background">
+                {isFile ?
+                    <><Image/><span>{nama??"file"}</span></> 
+                    : 
+                    <><Folder/><span>{nama??"folder"}</span></>
+                }
+            </div>
+        </Link>
+    )
+}
