@@ -11,6 +11,11 @@ import handleParseResponse from "@/lib/fetch/handlefetch";
 
 /**@type {{ [key: string]: import("./dynamicform").Field }}  */
 const userConfig = Object.preventExtensions({
+    id: {
+        type:"hidden",
+        parse:String
+    },
+
     name:{
         label:"Nama",
         type:"text" ,
@@ -61,7 +66,7 @@ const STATUS_KEY_REACT = "user_cud";
 
 //check config, throw if doesn't match prismaschema
 
-const {id,createdAt,updatedAt,...userfields} = Prisma.UserScalarFieldEnum;
+const {createdAt,updatedAt,...userfields} = Prisma.UserScalarFieldEnum;
 for(const field in userfields)
     if(!userConfig[field])
         throw new Error("userconfig doesn't match database schema \n"+field);
