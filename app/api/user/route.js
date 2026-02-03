@@ -103,7 +103,7 @@ export async function DELETE(request) {
         if(!validated.success)
             return NextResponse.json({data:flaterr(validated.error)},{status:st4xx.badRequest});
 
-        const user = prisma.user.delete({
+        const user =await prisma.user.delete({
             where: validated.data,
             select:{
                 id:true
