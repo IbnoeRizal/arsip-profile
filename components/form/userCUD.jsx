@@ -7,6 +7,7 @@ import schemaToFields from "@/lib/schemaToFields";
 import Status from "../status";
 import { USER_CREATE_BY_ADMIN, USER_DELETE_BY_ADMIN, USER_PATCH_BY_ADMIN, USER_PATCH_BY_USER } from "@/lib/authschema";
 import { useCredential } from "@/context/usercredential";
+import handleParseResponse from "@/lib/fetch/handlefetch";
 
 /**@type {{ [key: string]: import("./dynamicform").Field }}  */
 const userConfig = Object.preventExtensions({
@@ -96,14 +97,20 @@ const REQUEST_MODE = Object.freeze({
     })
 })
 
+/**
+ * 
+ * @param {{option: "CREATE" | "UPDATE" | "DELETE", id:string, callback:CallableFunction | null}} param0 
+ * @returns {import("react").JSX.Element}
+ */
 export function UserCUD({option,id}){
     const userCredential = useCredential();
     const [optionform,setOptionform] = useState(REFINED_FIELDS[option]??null);
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState({
+
+    const status = useRef({
         message: "",
-        code: 0
-    })
+        code:0,
+    });
 
     const controller = useRef(null);
 
@@ -130,13 +137,14 @@ export function UserCUD({option,id}){
         });
 
         try{
-            const data = await fetch(request);
-            const body = await data.json();
+            const response = await fetch(request);
+            const body = await handleParseResponse(response);
 
-            setData({
-                message: data.ok ? data.statusText : body.data,
-                code: data.status
-            });
+            status.current.message = [body.data, body, response.statusText].find(x => typeof x === "string");
+            status.current.code = response.status;
+
+            
+
         }catch(err){
 
             if(err.name !== "AbortError")
@@ -150,10 +158,10 @@ export function UserCUD({option,id}){
     useEffect(()=>{
         setOptionform(REFINED_FIELDS[option]??null);
         return ()=>controller.current?.abort();
-    },[data.code,option])
+    },[option])
 
    if(loading)
-        return <span><h3>loading</h3><Loader/></span>;
+        return <span><h3>loading </h3><Loader/></span>;
 
    if(!userCredential?.role || !optionform || (option === "UPDATE" && !id))
         return <span>There is no form suitable for your case</span>;
