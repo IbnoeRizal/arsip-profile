@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Status from "../status";
 import { useRouter} from "next/navigation";
 import DynamicForm from "./dynamicform";
+import { useCredential } from "@/context/usercredential";
 
 /**
  * @param {string} email
@@ -24,7 +25,8 @@ const sendCredential = async (email, password, signal) => {
 
 export default function Login() {
   const router = useRouter();
-
+  
+  const userCredential = useCredential();
   const [respond, setRespond] = useState({
     /** @type {string | object} */
     message: "",
