@@ -119,7 +119,7 @@ export function UserCUD({option,id}){
         let {URL,METHOD} = REQUEST_MODE[option];
 
         if(METHOD === "PATCH")
-            URL = URL.replace("[id]",id);
+            URL = URL.replace("[id]",userCredential.role === "USER"? "me" : id);
 
         setLoading(true);
 
@@ -170,8 +170,7 @@ export function UserCUD({option,id}){
         <>
             <Status 
                 key={STATUS_KEY_REACT} 
-                code={data.code} 
-                message={data.message}
+                {...status.current}
                 manual={true}
             />
             <DynamicForm 
