@@ -11,7 +11,7 @@ import { NextResponse } from "next/server";
  * @param {{params:Promise<{id:string}>}} context
  * @returns {Promise<NextResponse>} 
  */
-export async function POST(request,context) {
+export async function PATCH(request,context) {
     try{
         const [payload,{id},rawdata] = await Promise.all([
             getUserFromRequest(request),
