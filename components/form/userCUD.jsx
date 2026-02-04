@@ -9,7 +9,7 @@ import { USER_CREATE_BY_ADMIN, USER_DELETE_BY_ADMIN, USER_PATCH_BY_ADMIN, USER_P
 import { useCredential } from "@/context/usercredential";
 import handleParseResponse from "@/lib/fetch/handlefetch";
 
-/**@type {{ [key: string]: import("./dynamicform").Field }}  */
+/**@type {{ [key: string]: import("@/components/form/dynamicform").Field }}  */
 const userConfig = Object.preventExtensions({
     id: {
         type:"hidden",
