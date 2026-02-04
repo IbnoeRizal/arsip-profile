@@ -149,7 +149,7 @@ export function UserCUD({option,id,skip}){
             const response = await fetch(request);
             const body = await handleParseResponse(response);
 
-            status.current.message = body.data ?? body ?? response.statusText;
+            status.current.message = body.data ?? (String(body).length < 100 ? body :null) ?? response.statusText;
             status.current.code = response.status;
 
             
