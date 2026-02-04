@@ -171,6 +171,17 @@ export function UserCUD({option,id}){
    if(!userCredential?.role || !optionform || (option === "UPDATE" && !id))
         return <span>There is no form suitable for your case</span>;
 
+   /**@type {import("@/components/form/dynamicform").Field[]} */
+    const fields = optionform[userCredential.role]?.map((x)=>{
+        /**@type {import("@/components/form/dynamicform").Field} */
+        const cp = Object.create(x);
+        
+        if(cp.name === "id")
+            cp.default = id ?? "";
+
+        return cp;
+    });
+
    return(
         <>
             <Status 
@@ -179,7 +190,7 @@ export function UserCUD({option,id}){
                 manual={true}
             />
             <DynamicForm 
-                fields={optionform?.[userCredential.role]}
+                fields={fields}
                 onSubmit={handlesubmit}
             />
         </>
