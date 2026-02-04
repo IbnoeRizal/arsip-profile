@@ -1,7 +1,7 @@
 "use client"
 
 import Status from "@/components/status";
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import ProfilePic from "@/components/profilepic";
 import Loading from "./loading";
 import { useCredential } from "@/context/usercredential";
@@ -12,6 +12,7 @@ import Login from "@/components/form/login"; "@/components/form/login";
 import { UserCUD } from "@/components/form/userCUD";
 import { motion } from "motion/react";
 import { useBoundContext } from "@/context/boundary";
+import { DriveObjCUD } from "@/components/form/driveObjCUD";
 
 export default function GetUserInfo({id}){
 
@@ -111,6 +112,10 @@ function User({id,name,email,bio,jabatan,mengajar}){
     const userCredential = useCredential();
     const can_edit = userCredential?.id === id || userCredential?.role === "ADMIN";
     const [visibleChild, setVisibleChild] = useState(false);
+    const [profilepic_id, setProfilePic_id] = useState("");
+
+    const handlePicid = useCallback((id)=>setProfilePic_id(id), [id]);
+
     useEffect(()=>{
         setVisibleChild(false);
     },[userCredential]);
@@ -123,7 +128,7 @@ function User({id,name,email,bio,jabatan,mengajar}){
             
             <div className="flex justify-center md:w-1/4">
                 <div className="size-fit flex grow-o last:items-end">
-                    <ProfilePic id={id} h={200} w={200}/>
+                    <ProfilePic id={id} h={200} w={200} fun={handlePicid}/>
                     <div className="flex flex-row grow-0 items-end justify-center">
                         
                         <ThemeButton 
@@ -143,10 +148,21 @@ function User({id,name,email,bio,jabatan,mengajar}){
 
            
             {visibleChild && can_edit && 
-                <motion.div className="inset-20 size-fit m-auto fixed" drag dragConstraints={boundary}>
-                    <div className="border border-dotted rounded-md p-5 flex flex-col gap-4 bg-background">
-                        <h2 className="text-2xl font-bold self-center border-b-2 border-dotted"> Update </h2>
-                        <UserCUD id={id} option={"UPDATE"}/>
+                <motion.div className="inset-20 size-fit m-auto fixed" drag dragConstraints={boundary} whileDrag={{backgroundColor:"rgba(0, 128, 0, 1)"}} onClick={(e)=>{e.stopPropagation()}}>
+                    <div className="max-sm:m-2 sm:mt-2 max-sm:max-h-100 max-sm:overflow-y-scroll">
+                        <div className="border border-dotted rounded-md p-5 flex flex-col gap-4 bg-background">
+                            <h2 className="text-2xl font-bold self-center border-b-2 border-dotted sticky top-0 bg-inherit w-full text-center"> Update </h2>
+                            <div className="sm:grid grid-cols-2 place-content-center place-items-stretch gap-2 *:rounded-sm *:p-2 flex flex-col ">
+                                <div className=" border border-dotted">
+                                    <UserCUD id={id} option={"UPDATE"}/>
+                                </div>
+
+                                <div className=" border border-dotted">
+                                    <DriveObjCUD id={profilepic_id} option={"UPDATE"} skip={["category"]}/>
+                                </div>
+                                
+                            </div>
+                        </div>
                     </div>
                 </motion.div>
             }
