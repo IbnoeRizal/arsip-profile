@@ -172,19 +172,30 @@ export function UserCUD({option,id,skip}){
    if(loading)
         return <span><h3>loading </h3><Loader/></span>;
 
-   if(!userCredential?.role || !optionform || (option === "UPDATE" && !id))
+   if(!userCredential?.role || !optionform || (option !== "CREATE" && !id))
         return <span>There is no form suitable for your case</span>;
 
-   /**@type {import("@/components/form/dynamicform").Field[]} */
-    const fields = optionform[userCredential.role]?.map((x)=>{
-        /**@type {import("@/components/form/dynamicform").Field} */
-        const cp = Object.create(x);
-        
-        if(cp.name === "id")
-            cp.default = id ?? "";
 
-        return cp;
-    });
+    /**@type {import("@/components/form/dynamicform").Field[]} */
+    const fields = [];
+
+    for(const field of optionform[userCredential.role]){
+        /**@type {import("@/components/form/dynamicform").Field} */
+        let temp = field;
+        
+        //skip element cetrtain fields
+        if(skip?.includes(temp.name))
+            continue;
+
+        // add default value for id
+        if(temp.name === "id"){
+            temp = Object.create(field);
+            temp.default = id;
+        }
+
+        
+        fields.push(temp);
+    }
 
    return(
         <>
