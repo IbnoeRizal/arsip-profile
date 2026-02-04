@@ -146,7 +146,7 @@ function User({id,name,email,bio,jabatan,mengajar}){
                 <motion.div className="inset-20 size-fit m-auto fixed" drag dragConstraints={boundary}>
                     <div className="border border-dotted rounded-md p-5 flex flex-col gap-4 bg-background">
                         <h2 className="text-2xl font-bold self-center border-b-2 border-dotted"> Update </h2>
-                        <UserCUD id={id} option={"DELETE"} />
+                        <UserCUD id={id} option={"UPDATE"}/>
                     </div>
                 </motion.div>
             }
