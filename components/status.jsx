@@ -15,6 +15,8 @@ export default function Status({message, code, manual = false}){
 
 
     useEffect(()=>{
+        setVisible(code !== 0);
+        
         if(manual) return;
 
         const x = setTimeout(()=>{
@@ -100,9 +102,9 @@ export default function Status({message, code, manual = false}){
     }
     
     return (
-        <motion.div className="flex min-h-50 flex-row-reverse w-fit items-center justify-center fixed top-[20%]" drag dragMomentum={true} dragConstraints={boundary} >
+        <motion.div className="flex flex-row-reverse items-center justify-center fixed top-[20%]" drag dragMomentum={true} dragConstraints={boundary} >
             <XSquareIcon 
-                className={`${colorMap.red.stroke} self-start cursor-pointer`} 
+                className={`${colorMap.red.stroke} self-start cursor-pointer shrink-0`} 
                 onClick={
                     (e)=>{
                         e.stopPropagation();
