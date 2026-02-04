@@ -1,10 +1,10 @@
 'use client'
 import { Role,Prisma } from "@/generated/prisma/browser";
 import { useEffect, useRef, useState } from "react";
-import Loader from "../loading";
-import DynamicForm from "./dynamicform";
+import Loader from "@/components/loading";
+import DynamicForm from "@/components/form/dynamicform";
 import schemaToFields from "@/lib/schemaToFields";
-import Status from "../status";
+import Status from "@/components/status";
 import { USER_CREATE_BY_ADMIN, USER_DELETE_BY_ADMIN, USER_PATCH_BY_ADMIN, USER_PATCH_BY_USER } from "@/lib/authschema";
 import { useCredential } from "@/context/usercredential";
 import handleParseResponse from "@/lib/fetch/handlefetch";
