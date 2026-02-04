@@ -103,11 +103,15 @@ const REQUEST_MODE = Object.freeze({
 })
 
 /**
+ * @param {{
+ *      option   : "CREATE" | "UPDATE" | "DELETE", 
+ *      id       : string, 
+ *      skip     : ( "id" | "name" | "email" | "bio" | "role" | "jabatanId" | "password")[] | undefined
+ * }} param0 
  * 
- * @param {{option: "CREATE" | "UPDATE" | "DELETE", id:string, callback:CallableFunction | null}} param0 
  * @returns {import("react").JSX.Element}
  */
-export function UserCUD({option,id}){
+export function UserCUD({option,id,skip}){
     const userCredential = useCredential();
     const [optionform,setOptionform] = useState(REFINED_FIELDS[option]??null);
     const [loading, setLoading] = useState(false);
