@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
  *  options?: { label: string, value: string | number }[]
  *  parse?: (value:any)=>any,
  *  required?: boolean,
+ *  default? :any
  *  source?: {
  *    url:string,
  *    getlabel: string[],
@@ -173,7 +174,7 @@ export default function DynamicForm({ fields, onSubmit }) {
             <textarea  
               className="border-b border-dotted dark:border-b-white border-b-black outline-none p-2 focus:border-red-400 dark:focus:border-blue-400"
               id={field.name}
-
+              value={data[field.name] ?? field.default ?? ""}
               onChange={e => handleChange(field, e)}
             >
             </textarea>
@@ -185,6 +186,7 @@ export default function DynamicForm({ fields, onSubmit }) {
               className="border-b border-dotted dark:border-b-white border-b-black outline-none p-2 focus:border-red-400 dark:focus:border-blue-400"
               type={field.type ?? "text"}
               id={field.name}
+              value={data[field.name] ?? field.default ?? ""}
               onChange={e => handleChange(field, e)}
               required={field.required ?? true}
             />
