@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import ThemeButton from "@/components/button";
+import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from "lucide-react";
 
 /**
  * @typedef {{
@@ -13,7 +15,7 @@ import { useEffect, useState } from "react";
  *  required?: boolean,
  *  default? :any
  *  source?: {
- *    url:string,
+ *    url:string | URL,
  *    getlabel: string[],
  *    getvalue: string[],
  *  }
@@ -22,12 +24,13 @@ import { useEffect, useState } from "react";
 
 /**
  * @param {Field['source']} source 
- * @returns {Promise<Field['options']>}
+ * @param {AbortSignal | null | undefined} signal
+ * @returns {Promise<{label:string,value:string | number}[] | []>}
  */
-async function getOption(source){
+async function getOption(source,signal){
   const options = [];
   try{
-    const result = await fetch(source.url);
+    const result = await fetch(source.url,{signal:signal});
     const data = (await result.json()).data;
     
     if(result.ok){
@@ -49,7 +52,8 @@ async function getOption(source){
     }
     
   }catch(err){
-    console.error(err)
+    if(err !== "AbortError" && process.env.NODE_ENV === "development")
+      console.error(err);
   }finally{
     return options;
   }
@@ -63,7 +67,6 @@ async function getOption(source){
  */
 export default function DynamicForm({ fields, onSubmit }) {
   const [data, setData] = useState({});
-  const [options, setOptions] = useState({});
 
   /**
    * @param {Field} field 
@@ -96,33 +99,6 @@ export default function DynamicForm({ fields, onSubmit }) {
   
   }
 
-  useEffect(()=>{
-    for(let i = 0 ; i < fields.length; ++i){
-      const has_select_and_source = fields[i].as === "select" && fields[i].source;
-      const has_default_option = fields[i].options?.length > 0;
-
-      if(has_default_option){
-        setOptions(prev=>({
-          ...prev,
-          [fields[i].name] : fields[i].options
-        }));
-      }
-
-      if(has_select_and_source){
-        async function helper() {
-          const options = await getOption(fields[i].source);
-
-          setOptions(prev => ({
-            ...prev,
-            [fields[i].name] : options
-          }))
-        }
-
-        helper();
-      }
-    }
-  },[]);
-
   /**
    * @param {import("react").FormEvent<HTMLFormElement>} e 
    */
@@ -151,7 +127,7 @@ export default function DynamicForm({ fields, onSubmit }) {
           }
 
           {/* SELECT */}
-          {field.as === "select" && (
+          {field.as === "select" && !(field.source) &&(
             <select
               className="border rounded-md border-dotted p-2 outline-none "
               onChange={e => handleChange(field, e)}
@@ -161,12 +137,21 @@ export default function DynamicForm({ fields, onSubmit }) {
             >
               <option value="">
               </option>
-              {options[field.name]?.map(opt => (
-                <option key={opt.value} value={opt.value} className="bg-background active:bg-background  focus:bg-background">
+              {field?.options?.map(opt => (
+                <option key={opt.value} value={opt.value} className="bg-background">
                   {opt.label}
                 </option>
               ))}
             </select>
+          )}
+
+          {/* SELECT MODAL */}
+          {field.as === "select" && field.source &&(
+            <CreateModalSelector
+              callback={handleChange}
+              field={field}
+              key={field.name}
+            />
           )}
 
           {/*TEXTAREA*/}
@@ -202,4 +187,157 @@ export default function DynamicForm({ fields, onSubmit }) {
       </button>
     </form>
   );
+}
+
+/**
+ * @param {{field:Field, callback:Function | null | undefined}} param0 
+ * 
+ */
+function CreateModalSelector({field,callback}) {
+
+  const source = field["source"];
+
+  const [data,setData] = useState(
+    /**
+     * @type {({label:string, value:string|number} | {})[]} 
+     */
+    ([{
+      label:"",
+      value:""
+    }])
+  );
+
+  const [final,setFinal] = useState({
+    label: "",
+    value: ""
+  })
+
+  const [mode,setMode] = useState(
+    /**
+     * @type {"select" | "modal"}
+     */
+    ("select")
+  );
+  const [pagination,setPagination] = useState({
+    page:0,
+    limit:8,
+  })
+
+  const pageFlipper = useCallback((sign)=>
+    {
+      sign = Math.min(1,Math.max(-1,Number(sign)));
+
+      setPagination((prev)=>({
+        ...prev,
+        page: Math.max(0, prev.page + sign)
+      }));
+
+    }, [])
+
+  useEffect(()=>{
+    if(mode === "select") return;
+
+    const controller = new AbortController();
+
+    async function helper() {
+      try{
+        const url = new URL(source.url,window.location.origin);
+        url.searchParams.set("page", pagination.page);
+        url.searchParams.set("limit",pagination.limit);
+        const result = await getOption({...source,url}, controller.signal);
+        if(result.length > 0)
+            setData(result);
+      }catch(e){
+        if(e.name === "AbortError") return;
+
+        if(process.env.NODE_ENV === "development")
+          console.error(e);
+
+      }
+    }
+
+    helper();
+
+    return ()=>controller?.abort()
+  },[pagination.page, pagination.limit, mode])
+
+
+  /**
+   * @param {Event} e 
+   */
+  function clickTransform(data,e){
+    e?.stopPropagation();
+    if(mode === "modal"){
+      setFinal(data);
+      callback?.(field,{target:{value:data?.value}});
+
+    }
+    setMode(prev=>(prev === "select" ? "modal" : "select"));    
+  }
+
+  
+  if(mode === "modal")
+    return(
+      <div className="inset-0 flex flex-col justify-center items-center gap-4 p-3 size-fit dark:bg-blue-500/30 bg-red-500/30 rounded-sm">
+        <h2 className="text-white font-bold text-2xl">
+          Select
+        </h2>
+
+        <div 
+          className="flex flex-row justify-end items-end gap-1 size-fit"
+        >
+          <ThemeButton 
+            height={"auto"} 
+            width={"auto"} 
+            fun={()=>pageFlipper(-1)} 
+            text={<ArrowLeftCircleIcon/>}
+          />
+
+          <ThemeButton 
+            height={"auto"} 
+            width={"auto"} 
+            fun={()=>pageFlipper(1)} 
+            text={<ArrowRightCircleIcon />}
+          />
+
+        </div>
+
+
+        <div 
+          className="
+            grid 
+            sm:grid-cols-2 
+            lg:grid-cols-4 
+            justify-items-start 
+            place-items-stretch  
+            gap-x-1 gap-y-1.5 
+            text-balance 
+            *:flex
+            *:items-center
+            *:justify-center
+            ">
+
+          <div key={"deff"} value="" onClick={(e)=>clickTransform(null,e)} className="bg-background/70 hover:bg-background size-full rounded-md text-center border-background border">
+            {"Batal"}
+          </div>
+
+          {data?.map((x)=>{
+            return <div key={x.value} onClick={(e)=>clickTransform(x,e)} className="hover:bg-background size-full rounded-md text-center border-background border ">{x.label}</div>;
+          })}
+
+        </div>      
+      </div>
+    );
+
+  return(
+    <select 
+      name={field.name} 
+      onClick={(e)=>clickTransform(null, e)}
+      className="border rounded-md border-dotted p-2 outline-none"
+      required={field?.required ?? true}
+    >
+      <option value={final?.value??""}>{final?.label??""}</option>
+    </select>
+  )
+
 }
