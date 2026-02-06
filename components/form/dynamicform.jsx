@@ -220,7 +220,7 @@ function CreateModalSelector({field,callback}) {
   );
   const [pagination,setPagination] = useState({
     page:0,
-    limit:8,
+    limit:10,
   })
 
   const pageFlipper = useCallback((sign)=>
@@ -278,7 +278,7 @@ function CreateModalSelector({field,callback}) {
   
   if(mode === "modal")
     return(
-      <div className="inset-0 flex flex-col justify-center items-center gap-4 p-3 size-fit dark:bg-blue-500/30 bg-red-500/30 rounded-sm">
+      <div className="inset-0 flex flex-col justify-center items-center gap-4 p-3 size-fit dark:bg-blue-500/30 bg-red-500/30 rounded-sm mx-auto">
         <h2 className="text-white font-bold text-2xl">
           Select
         </h2>
@@ -306,23 +306,24 @@ function CreateModalSelector({field,callback}) {
         <div 
           className="
             grid 
+            auto-rows-fr
             sm:grid-cols-2 
-            lg:grid-cols-4 
-            justify-items-start 
             place-items-stretch  
             gap-x-1 gap-y-1.5 
             text-balance 
             *:flex
             *:items-center
             *:justify-center
+            *:font-bold
+            *:p-3
             ">
 
-          <div key={"deff"} value="" onClick={(e)=>clickTransform(null,e)} className="bg-background/70 hover:bg-background size-full rounded-md text-center border-background border">
+          <div key={"deff"} value="" onClick={(e)=>clickTransform(null,e)} className="bg-red-800/20 hover:bg-red-800/90 size-full rounded-md text-center border-black/70 border">
             {"Batal"}
           </div>
 
           {data?.map((x)=>{
-            return <div key={x.value} onClick={(e)=>clickTransform(x,e)} className="hover:bg-background size-full rounded-md text-center border-background border ">{x.label}</div>;
+            return <div key={x.value} onClick={(e)=>clickTransform(x,e)} className="hover:bg-black/15 size-full rounded-md text-center border-black/70 border ">{x.label}</div>;
           })}
 
         </div>      
