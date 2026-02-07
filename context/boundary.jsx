@@ -11,9 +11,10 @@ export const useBoundContext = function(){
     return ctx;
 }
 
-export function BoundaryProvider({children}){
+export function BoundaryProvider({children, list_link}){
     const ctx = useContext(BoundContext);
     const refboundary = useRef(null);
+
     if(ctx)
         return(<>
             {children}
@@ -22,7 +23,7 @@ export function BoundaryProvider({children}){
 
     return(
         <div ref={refboundary} className="">
-            <Navbar links={["/karyawan"]}/>
+            <Navbar links={list_link}/>
             <BoundContext.Provider value={refboundary}>
                 {children}
             </BoundContext.Provider>

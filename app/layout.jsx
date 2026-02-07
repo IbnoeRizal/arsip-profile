@@ -5,6 +5,7 @@ import { CredentialProvider } from "@/context/usercredential";
 import { getUserFromCookie } from "@/lib/auth";
 import { Suspense } from "react";
 import Loading from "./loading";
+import { Role } from "@/generated/prisma/enums";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,13 +28,11 @@ export default async function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased overscroll-x-none`}
       >
-        <BoundaryProvider>
-          <Suspense fallback={<Loading/>}>
-            <GetCredential>
+        <Suspense fallback={<Loading/>}>
+          <GetCredential>
             {children}
-            </GetCredential>
-          </Suspense>
-        </BoundaryProvider>
+          </GetCredential>
+        </Suspense>
       </body>
     </html>
   );
@@ -41,9 +40,16 @@ export default async function RootLayout({ children }) {
 
 async function GetCredential({children}){
   const payload = await getUserFromCookie();
+  const list_link = ["/karyawan"];
+
+  if(payload?.role === Role.ADMIN)
+    list_link.push("/administrator");
+  
   return (
     <CredentialProvider id={payload?.id} role={payload?.role}>
-      {children}
+      <BoundaryProvider list_link={list_link}>
+        {children}
+      </BoundaryProvider>
     </CredentialProvider>
   )
 }
