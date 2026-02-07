@@ -1,20 +1,15 @@
 'use client'
 import { Prisma, $Enums } from "@/generated/prisma/browser";
-import DynamicForm from "@/components/form/dynamicform";
 import schemaToFields from "@/lib/schemaToFields";
 import { DRIVEOBJ_CREATE_BY_ADMIN, DRIVEOBJ_DELETE_BY_ADMIN, DRIVEOBJ_UPDATE_BY_ADMIN } from "@/lib/authschema";
-import { useCredential } from "@/context/usercredential";
-import { useEffect, useRef, useState } from "react";
-import Status from "@/components/status";
-import handleParseResponse from "@/lib/fetch/handlefetch";
-import Loader from "@/components/loading";
+import { MergeDynaform } from "./dynamicform/mergerform";
 
 
 
 /**
  * configuration needed to safely parse schema to fields
  */
-/**@type {{ [key: string]: import("@/components/form/dynamicform").Field }}  */
+/**@type {{ [key: string]: import("@/components/form/dynamicform/dynamicform").Field }}  */
 const driveConfig = Object.preventExtensions({
     id :{
         type:"hidden",
@@ -91,100 +86,23 @@ const REQUEST_MODE = Object.freeze({
  * @param {{
  *      option   : "CREATE" | "UPDATE" | "DELETE", 
  *      id       : string, 
- *      skip     : ("id" | "link" | "userId" | "category")[] | undefined   
+ *      skip     : ("id" | "link" | "userId" | "category")[] | undefined  
+ *      fun      : Function | null | undefined 
  * }} param0 
  * 
  * @returns {import("react").JSX.Element}
  */
-export function DriveObjCUD({option,id,skip}){
-    const userCredential = useCredential();
-    const [optionForm, setOptionForm] = useState(REFINED_FIELDS[option]?? null);
-    const [isLoading, setLoading] = useState(false);
-    const status = useRef({
-        message:"",
-        code:0
-    })
-
-    const controller = useRef(null);
-    useEffect(()=>{
-        setOptionForm(REFINED_FIELDS[option]??null)
-    },[option,userCredential.id,userCredential.role,id])
-    
-    async function handleSubmit(data){
-        setLoading(true);
-        controller.current?.abort();
-        controller.current = new AbortController();
-        
-        let {URL,METHOD} = REQUEST_MODE[option]?? REQUEST_MODE.CREATE;
-        URL = URL.replace("[id]", id);
-
-
-        const request = new Request(URL,{
-            body:JSON.stringify(data),
-            method:METHOD,
-            headers:{
-                "content-type":"application/json"
-            },
-            signal: controller.current.signal
-        });
-        
-        try {
-            const response = await fetch(request);
-            const body = await handleParseResponse(response);
-
-            status.current.message = body.data ?? (String(body).length < 100 ? body :null) ?? response.statusText;
-            status.current.code = response.status;
-
-        } catch (err) {
-            if(process.env.NODE_ENV === "development" && err.name !== "AbortError")
-                console.error(err);
-
-        }finally{
-            setLoading(false);
-        }
-
-    }
-
-    if(isLoading)
-        return(<span><h3>Loading </h3><Loader/></span>)
-
-    //guard needed to protect copy object
-    if(!userCredential?.role || !optionForm?.[userCredential.role] || (option !== "CREATE" && !id))
-        return <span>There is no form suitable for your case</span>;
-
-
-    /**@type {import("@/components/form/dynamicform").Field[]} */
-    const fields = [];
-
-    for(const field of optionForm[userCredential.role]){
-        /**@type {import("@/components/form/dynamicform").Field} */
-        let temp = field;
-        
-        //skip element cetrtain fields
-        if(skip?.includes(temp.name))
-            continue;
-
-        // add default value for id
-        if(temp.name === "id"){
-            temp = Object.create(field);
-            temp.default = id;
-        }
-
-        
-        fields.push(temp);
-    }
-
+export function DriveObjCUD({option,id,skip,fun}){
+ 
     return(
-        <>
-            <Status 
-                key={STATUS_KEY_REACT}
-                {...status.current}
-                manual={true}
-            />
-            <DynamicForm 
-                fields={fields}
-                onSubmit={handleSubmit}
-            />
-        </>
+        <MergeDynaform 
+            id={id} 
+            option={option} 
+            skip={skip}
+            REFINED_FIELDS={REFINED_FIELDS}
+            REQUEST_MODE={REQUEST_MODE}
+            STATUS_KEY_REACT={STATUS_KEY_REACT}
+            fun={fun}
+        />
     )
 }

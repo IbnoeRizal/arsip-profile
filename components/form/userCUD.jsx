@@ -1,15 +1,10 @@
-'use client'
+"use client"
 import { Role,Prisma } from "@/generated/prisma/browser";
-import { useEffect, useRef, useState } from "react";
-import Loader from "@/components/loading";
-import DynamicForm from "@/components/form/dynamicform";
 import schemaToFields from "@/lib/schemaToFields";
-import Status from "@/components/status";
 import { USER_CREATE_BY_ADMIN, USER_DELETE_BY_ADMIN, USER_PATCH_BY_ADMIN, USER_PATCH_BY_USER } from "@/lib/authschema";
-import { useCredential } from "@/context/usercredential";
-import handleParseResponse from "@/lib/fetch/handlefetch";
+import { MergeDynaform } from "./dynamicform/mergerform";
 
-/**@type {{ [key: string]: import("@/components/form/dynamicform").Field }}  */
+/**@type {{ [key: string]: import("@/components/form/dynamicform/dynamicform").Field }}  */
 const userConfig = Object.preventExtensions({
     id: {
         type:"hidden",
@@ -107,107 +102,19 @@ const REQUEST_MODE = Object.freeze({
  *      option   : "CREATE" | "UPDATE" | "DELETE", 
  *      id       : string, 
  *      skip     : ( "id" | "name" | "email" | "bio" | "role" | "jabatanId" | "password")[] | undefined
+ *      fun      : Function | null | undefined
  * }} param0 
  * 
  * @returns {import("react").JSX.Element}
  */
-export function UserCUD({option,id,skip}){
-    const userCredential = useCredential();
-    const [optionform,setOptionform] = useState(REFINED_FIELDS[option]??null);
-    const [loading, setLoading] = useState(false);
-
-    const status = useRef({
-        message: "",
-        code:0,
-    });
-
-    const controller = useRef(null);
-
-    async function handlesubmit(data){
-        
-        let {URL,METHOD} = REQUEST_MODE[option];
-
-        if(METHOD === "PATCH")
-            URL = URL.replace("[id]",userCredential.role === "USER"? "me" : id);
-
-        setLoading(true);
-
-        controller.current?.abort();
-        controller.current = new AbortController();
-
-        console.table(data);
-        const request = new Request(URL,{
-            body:JSON.stringify(data),
-            method:METHOD,
-            headers:{
-                "Content-Type" : "application/json"
-            },
-            signal:controller.current.signal,
-        });
-
-        try{
-            const response = await fetch(request);
-            const body = await handleParseResponse(response);
-
-            status.current.message = body.data ?? (String(body).length < 100 ? body :null) ?? response.statusText;
-            status.current.code = response.status;
-
-            
-
-        }catch(err){
-
-            if(err.name !== "AbortError")
-                console.error(err);
-        }finally{
-            setLoading(false);
-        }
-        
-    }
-
-    useEffect(()=>{
-        setOptionform(REFINED_FIELDS[option]??null);
-        return ()=>controller.current?.abort();
-    },[option])
-
-   if(loading)
-        return <span><h3>loading </h3><Loader/></span>;
-
-   if(!userCredential?.role || !optionform || (option !== "CREATE" && !id))
-        return <span>There is no form suitable for your case</span>;
-
-
-    /**@type {import("@/components/form/dynamicform").Field[]} */
-    const fields = [];
-
-    for(const field of optionform[userCredential.role]){
-        /**@type {import("@/components/form/dynamicform").Field} */
-        let temp = field;
-        
-        //skip element cetrtain fields
-        if(skip?.includes(temp.name))
-            continue;
-
-        // add default value for id
-        if(temp.name === "id"){
-            temp = Object.create(field);
-            temp.default = id;
-        }
-
-        
-        fields.push(temp);
-    }
-
-   return(
-        <>
-            <Status 
-                key={STATUS_KEY_REACT} 
-                {...status.current}
-                manual={true}
-            />
-            <DynamicForm 
-                fields={fields}
-                onSubmit={handlesubmit}
-            />
-        </>
-   )
+export function UserCUD({option,id,skip,fun}){
+    return <MergeDynaform 
+        id={id} 
+        option={option} 
+        skip={skip} 
+        REFINED_FIELDS={REFINED_FIELDS}
+        REQUEST_MODE={REQUEST_MODE}
+        STATUS_KEY_REACT={STATUS_KEY_REACT}
+        fun={fun}
+    />
 }

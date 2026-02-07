@@ -98,6 +98,12 @@ export default function DynamicForm({ fields, onSubmit }) {
     });
   
   }
+  
+  useEffect(()=>{
+    for(const field of fields){
+      field.default && setData(prev=>({...prev, [field.name]: field.default}));
+    }
+  },[fields])
 
   /**
    * @param {import("react").FormEvent<HTMLFormElement>} e 
@@ -219,7 +225,7 @@ function CreateModalSelector({field,callback}) {
     ("select")
   );
   const [pagination,setPagination] = useState({
-    page:0,
+    page:1,
     limit:10,
   })
 
@@ -229,7 +235,7 @@ function CreateModalSelector({field,callback}) {
 
       setPagination((prev)=>({
         ...prev,
-        page: Math.max(0, prev.page + sign)
+        page: Math.max(1, prev.page + sign)
       }));
 
     }, [])
@@ -278,7 +284,7 @@ function CreateModalSelector({field,callback}) {
   
   if(mode === "modal")
     return(
-      <div className="inset-0 flex flex-col justify-center items-center gap-4 p-3 size-fit dark:bg-blue-500/30 bg-red-500/30 rounded-sm mx-auto">
+      <div className="inset-0 flex flex-col justify-center items-center gap-4 p-3 dark:bg-blue-500/30 bg-red-500/30 rounded-sm">
         <h2 className="text-white font-bold text-2xl">
           Select
         </h2>

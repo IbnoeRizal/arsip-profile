@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Status from "../status";
 import { useRouter} from "next/navigation";
-import DynamicForm from "./dynamicform";
+import DynamicForm from "./dynamicform/dynamicform";
 import { useCredential } from "@/context/usercredential";
 
 /**
