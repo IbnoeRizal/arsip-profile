@@ -13,7 +13,7 @@ import { flaterr, MENGAJAR_UPDATE_BY_ADMIN } from "@/lib/authschema";
  * @param {{params:Promise<{id:string}>}} context
  * @returns {Promise<NextResponse>}
  */
-export async function POST(request,context) {
+export async function PATCH(request,context) {
     try {
         const [rawdata,{id},payload] = await Promise.all([
             request.json(),
