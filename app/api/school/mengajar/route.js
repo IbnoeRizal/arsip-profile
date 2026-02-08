@@ -22,9 +22,26 @@ export async function GET(request) {
             prisma.mengajar.findMany({
                 select:{
                     id:true,
-                    idKelas:true,
-                    idMapel:true,
-                    idUser:true,
+                    kelas:{
+                        select:{
+                            id:true,
+                            nama:true
+                        }
+                    },
+
+                    mapel:{
+                        select:{
+                            id:true,
+                            nama:true,
+                        }
+                    },
+                    
+                    user:{
+                        select:{
+                            id:true,
+                            name:true,
+                        }
+                    }
                 },
                 take:limit,
                 skip:page*limit
