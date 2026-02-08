@@ -24,7 +24,7 @@ export default function Status({message, code, manual = false}){
         },1500)
 
         return ()=>clearTimeout(x);
-    },[code]);
+    },[code,message]);
     
     if(!visible || !boundary) return <></>;
 
