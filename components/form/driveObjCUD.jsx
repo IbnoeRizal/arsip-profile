@@ -11,26 +11,30 @@ import { MergeDynaform } from "./dynamicform/mergerform";
  */
 /**@type {{ [key: string]: import("@/components/form/dynamicform/dynamicform").Field }}  */
 const driveConfig = Object.preventExtensions({
-    id :{
+    [Prisma.DriveObjScalarFieldEnum.id] :{
         type:"hidden",
         as: "input",
         parse: String,
     },
 
-    link : {
+    [Prisma.DriveObjScalarFieldEnum.link] : {
         label : "Link",
         as: "input",
         type: "url",
         parse: String,
     },
 
-    userId : {
-        type: "hidden",
-        as: "input",
-        parse: String,
+    [Prisma.DriveObjScalarFieldEnum.userId] : {
+        label : "Pilih User",
+        as: "select",
+        source : {
+            getlabel: ["name"],
+            getvalue: ["id"],
+            url: "/api/user"
+        }
     },
 
-    category: {
+    [Prisma.DriveObjScalarFieldEnum.category]: {
         label:"Kategori",
         as:"select",
         options: Object.entries($Enums.Category).map(([label,value])=>({label,value})),
@@ -86,8 +90,8 @@ const REQUEST_MODE = Object.freeze({
  * @param {{
  *      option   : "CREATE" | "UPDATE" | "DELETE", 
  *      id       : string, 
- *      skip     : ("id" | "link" | "userId" | "category")[] | undefined  
- *      fun      : Function | null | undefined 
+ *      skip?    : Prisma.DriveObjScalarFieldEnum[]
+ *      fun?     : Function
  * }} param0 
  * 
  * @returns {import("react").JSX.Element}
