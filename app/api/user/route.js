@@ -27,7 +27,9 @@ export async function GET(request) {
                         select:{
                             title:true
                         }
-                    }
+                    },
+                    email:true,
+                    role:true,
                 },
                 take: limit,
                 skip: page * limit
@@ -74,6 +76,8 @@ export async function POST(request) {
                         title:true
                     }
                 },
+                email: true,
+                role: true,
             }
         });
 
