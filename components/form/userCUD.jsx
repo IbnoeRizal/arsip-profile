@@ -6,30 +6,30 @@ import { MergeDynaform } from "./dynamicform/mergerform";
 
 /**@type {{ [key: string]: import("@/components/form/dynamicform/dynamicform").Field }}  */
 const userConfig = Object.preventExtensions({
-    id: {
+    [Prisma.UserScalarFieldEnum.id]: {
         type:"hidden",
         parse:String
     },
 
-    name:{
+    [Prisma.UserScalarFieldEnum.name]:{
         label:"Nama",
         type:"text" ,
         parse: String,
     },
 
-    email:{
+    [Prisma.UserScalarFieldEnum.email]:{
         label: "Email",
         type:"email",
         parse: String,
     },
 
-    bio:{
+    [Prisma.UserScalarFieldEnum.bio]:{
         label: "Bio",
         as: "textarea",
         parse: String,
     },
 
-    role:{
+    [Prisma.UserScalarFieldEnum.role]:{
         label: "Role",
         as:"select",
         options: Object.entries(Role).map(([label,value])=>({label,value})),
@@ -37,7 +37,7 @@ const userConfig = Object.preventExtensions({
     },
 
 
-    jabatanId:{
+    [Prisma.UserScalarFieldEnum.jabatanId]:{
         label: "Jabatan",
         as:"select",
         parse: String,
@@ -48,7 +48,7 @@ const userConfig = Object.preventExtensions({
         }
     },
 
-    password:{
+    [Prisma.UserScalarFieldEnum.password]:{
         label: "Password",
         type: "password",
         parse: String
@@ -101,8 +101,8 @@ const REQUEST_MODE = Object.freeze({
  * @param {{
  *      option   : "CREATE" | "UPDATE" | "DELETE", 
  *      id       : string, 
- *      skip     : ( "id" | "name" | "email" | "bio" | "role" | "jabatanId" | "password")[] | undefined
- *      fun      : Function | null | undefined
+ *      skip?    : Prisma.UserScalarFieldEnum[]
+ *      fun?     : Function
  * }} param0 
  * 
  * @returns {import("react").JSX.Element}
