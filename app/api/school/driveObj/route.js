@@ -30,7 +30,8 @@ export async function GET(request) {
                             id:true,
                             name:true,
                         }
-                    }
+                    },
+                    category:true
                 },
                 take:limit,
                 skip:page * limit
@@ -74,7 +75,8 @@ export async function POST(request) {
                         id:true,
                         name:true
                     }
-                }
+                },
+                category:true
             }
         });
 
