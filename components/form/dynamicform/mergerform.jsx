@@ -72,8 +72,6 @@ export function MergeDynaform({ option, id, skip, REFINED_FIELDS, REQUEST_MODE, 
 
     }
 
-    if (isLoading)
-        return (<span><h3>Loading </h3><Loader /></span>)
 
     //guard needed to protect copy object
     if (!userCredential?.role || !optionForm?.[userCredential.role] || (option !== "CREATE" && !id))
@@ -108,6 +106,7 @@ export function MergeDynaform({ option, id, skip, REFINED_FIELDS, REQUEST_MODE, 
                 {...status.current}
                 manual={true}
             />
+            {isLoading && <span className="flex flex-row justify-center items-center"><Loader /></span>}
             <DynamicForm
                 fields={fields}
                 onSubmit={handleSubmit}
