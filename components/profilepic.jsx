@@ -2,13 +2,16 @@
 import { useEffect, useRef, useState } from "react";
 import { UserCircle2Icon } from "lucide-react"
 import handleParseResponse from "@/lib/fetch/handlefetch";
+import Image from "next/image";
+
+const category = Object.freeze({OK:"OK",ERROR:"ERROR"});
 
 const colorPallet = {
-    ERROR : {
+    [category.ERROR] : {
         stroke : "stroke-red-900"
     },
 
-    OK : {
+    [category.OK] : {
         stroke : "dark:stroke-blue-300"
     }
 }
@@ -20,7 +23,7 @@ export default function ProfilePic({id,w=300,h=300,fun}){
         code: 0
     });
 
-    const [isError, setError] = useState("Ok");
+    const [isError, setError] = useState(category.OK);
 
     const controller = useRef(null);
 
@@ -47,10 +50,8 @@ export default function ProfilePic({id,w=300,h=300,fun}){
                     const url = new URL(original);
                     const parts = url.pathname.split("/");
                     const d_index = parts.indexOf("d");
-                    return d_index !== -1 ? `https://drive.google.com/thumbnail?id=${parts[d_index + 1]}` : null;
+                    return d_index !== -1 ? `https://drive.google.com/thumbnail?&id=${parts[d_index + 1]}` : null;
                 })();
-                if(drivePicture)
-                    console.log(drivePicture);
 
                 setData({
                     text: drivePicture ?? result?.data.link ?? "",
@@ -76,17 +77,32 @@ export default function ProfilePic({id,w=300,h=300,fun}){
     
     return(
         <div className="rounded-full overflow-hidden shrink-0 ring-1 dark:ring-blue-300 ring-black/10" style={{width:w, height:h}}>
-            {data.code/100 < 3 && data.text !== ""?
+            {isError === category.OK && data.text.includes("drive.google.com") &&
+                <Image 
+                    src={data.text} 
+                    className="w-full h-full object-cover" 
+                    alt="profile" 
+                    onError={()=>{
+                            setData(prev=>({...prev,text:""}))
+                            setError(category.ERROR)
+                        }}
+                    loading="lazy"
+                    height={h}
+                    width={w}
+                ></Image>
+            }{isError === category.OK && data.text !== "" &&
                 <img 
                     src={data.text} 
                     className="w-full h-full object-cover" 
                     alt="profile" 
                     onError={()=>{
                             setData(prev=>({...prev,text:""}))
-                            setError("ERROR")
+                            setError(category.ERROR)
                         }}
                     loading="lazy"
-                ></img>: 
+                ></img>
+            }
+            {(isError === category.ERROR || data.text === "") &&
                 <UserCircle2Icon className={`mask-circle ${c} w-full`} style={{width:w, height:h}}/>
             }
         </div>
