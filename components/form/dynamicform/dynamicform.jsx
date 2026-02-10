@@ -25,16 +25,18 @@ import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from "lucide-react";
 /**
  * @param {Field['source']} source 
  * @param {AbortSignal | null | undefined} signal
- * @returns {Promise<{label:string,value:string | number}[] | []>}
+ * @returns {Promise<{options:{label:string,value:string | number}[],total}>}
  */
 async function getOption(source,signal){
   const options = [];
+  let total;
   try{
     const result = await fetch(source.url,{signal:signal});
     const data = (await result.json()).data;
     
     if(result.ok){
       const ref = data?.length >=2 && !isNaN(data[1]) ? data[0] : data;
+      total = data[1] ?? ref.length;
 
       for(let i = 0 ; i < ref.length; ++i){
         let label = ref[i];
@@ -55,7 +57,10 @@ async function getOption(source,signal){
     if(err !== "AbortError" && process.env.NODE_ENV === "development")
       console.error(err);
   }finally{
-    return options;
+    return {
+      options,
+      total : total ?? options.length
+    };
   }
 }
 
@@ -227,18 +232,21 @@ function CreateModalSelector({field,callback}) {
   const [pagination,setPagination] = useState({
     page:1,
     limit:10,
+    total:10,
   })
 
   const pageFlipper = useCallback((sign)=>
     {
       sign = Math.min(1,Math.max(-1,Number(sign)));
+      const maxPage = Math.ceil(pagination.total / pagination.limit);
+      if(pagination.page + sign > maxPage)return;
 
       setPagination((prev)=>({
         ...prev,
         page: Math.max(1, prev.page + sign)
       }));
 
-    }, [])
+    }, [pagination])
 
   useEffect(()=>{
     if(mode === "select") return;
@@ -250,9 +258,11 @@ function CreateModalSelector({field,callback}) {
         const url = new URL(source.url,window.location.origin);
         url.searchParams.set("page", pagination.page);
         url.searchParams.set("limit",pagination.limit);
-        const result = await getOption({...source,url}, controller.signal);
-        if(result.length > 0)
-            setData(result);
+        const {options,total} = await getOption({...source,url}, controller.signal);
+        if(total > 0){
+          setData(options);
+          setPagination(prev=>({...prev,total:total}))
+        }
       }catch(e){
         if(e.name === "AbortError") return;
 
