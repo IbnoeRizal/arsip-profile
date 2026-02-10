@@ -8,14 +8,12 @@ import {
     useEffect, 
     useCallback,
     useRef,
-    useLayoutEffect
 } from "react";
 
 import { 
     ArrowBigLeft, 
     ArrowBigRight,
     MoreHorizontal,
-    ArrowRight
 } from "lucide-react";
 
 /**
@@ -50,9 +48,12 @@ export default function ShowDataof({config, title, fun}){
         limit: 4,
         total : 4
     });
-
+    
     //set the page state, loading or loaded
     const [loading, setLoading] = useState(false);
+    
+    //reference to heading
+    const refHeading = useRef(null);
 
     //flip current page to next or prev;
     const pageFlipper = useCallback((sign)=>{
@@ -63,8 +64,15 @@ export default function ShowDataof({config, title, fun}){
 
         setDisplay(prev=>({
             ...prev,
-            page: Math.max(1, display.page + sign),
+            page: Math.max(1, prev.page+ sign),
         }))
+
+        if(!refHeading.current) return;
+        const top = refHeading.current?.getBoundingClientRect().top + window.scrollY; 
+        window.scrollTo({ 
+            top: top - 110,
+            behavior: 'smooth' ,
+        });
 
     }, [display]);
 
@@ -125,19 +133,6 @@ export default function ShowDataof({config, title, fun}){
         return ()=>controller.abort();
     },[display.page,display.limit]);
 
-    //reference to heading
-    const refHeading = useRef(null);
-    
-
-    useLayoutEffect(()=>{
-        return()=>{
-            const top = refHeading.current?.getBoundingClientRect().top + window.scrollY; 
-            window.scrollTo({ 
-                top: top - 100,
-                behavior: 'smooth' 
-            });
-        }        
-    },[display.page])
     
 
 
