@@ -23,7 +23,7 @@ export async function GET(request) {
                 take:limit,
                 skip:page*limit
             }),
-            prisma.misi.count()
+            prisma.visi.count()
         ]);
 
         return NextResponse.json({data:visions},{status:st2xx.ok});
