@@ -9,6 +9,9 @@ import { JabatanCUD } from "@/components/form/jabatanCUD";
 import { KelasCUD } from "@/components/form/kelasCUD";
 import { MapelCUD } from "@/components/form/mapelCUD";
 import { MengajarCUD } from "@/components/form/mengajarCUD";
+import { VisiCUD } from "@/components/form/visiCUD";
+import Lazysegment from "@/components/lazysegment";
+import { useEffect } from "react";
 
 const SHOW_CONFIG = Object.freeze([
     Object.freeze({
@@ -18,7 +21,17 @@ const SHOW_CONFIG = Object.freeze([
             source: "/api/user",
         }),
         FORM: UserCUD,
-        TITLE: "User List"
+        TITLE: "List User"
+    }),
+
+    Object.freeze({
+        SHOW : Object.freeze({
+            key:["id"],
+            label:["vision"],
+            source: "/api/school/visi",
+        }),
+        FORM: VisiCUD,
+        TITLE: "List Visi"
     }),
 
     Object.freeze({
