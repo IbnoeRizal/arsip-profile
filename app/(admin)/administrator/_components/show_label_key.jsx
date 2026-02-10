@@ -6,7 +6,9 @@ import ThemeButton from "@/components/button";
 import { 
     useState, 
     useEffect, 
-    useCallback
+    useCallback,
+    useRef,
+    useLayoutEffect
 } from "react";
 
 import { 
@@ -31,23 +33,28 @@ import {
  * @param {{config: Config, title: string, fun: Function | null | undefined}} params0
  */
 export default function ShowDataof({config, title, fun}){
+
+    // store the current data
     const [data,setData] = useState(
         /**@type {({key: string, label:string, details:{}}[]) | null} */
         (null)
     );
+    // store the key in object, get boolean value from that to determine show detail or not
     const [getDetails, setGetdetails] = useState(
         {}
     )
 
-
+    //set the pagination setting
     const [display,setDisplay] = useState({
         page: 1,
         limit: 4,
         total : 4
     });
 
+    //set the page state, loading or loaded
     const [loading, setLoading] = useState(false);
 
+    //flip current page to next or prev;
     const pageFlipper = useCallback((sign)=>{
         sign = Math.min(1, Math.max(-1, sign));
 
@@ -118,6 +125,23 @@ export default function ShowDataof({config, title, fun}){
         return ()=>controller.abort();
     },[display.page,display.limit]);
 
+    //reference to heading
+    const refHeading = useRef(null);
+    
+
+    useLayoutEffect(()=>{
+        return()=>{
+            const top = refHeading.current?.getBoundingClientRect().top + window.scrollY; 
+            window.scrollTo({ 
+                top: top - 100,
+                behavior: 'smooth' 
+            });
+        }        
+    },[display.page])
+    
+
+
+    // get the item key from prev item, set it to inverse incase it is undefined or boolean
     function clicktoggleDetail(item){
         setGetdetails(prev=>({
             ...prev,
@@ -129,7 +153,7 @@ export default function ShowDataof({config, title, fun}){
 
     return(
         <section className=" flex flex-col gap-4 p-4 rounded-sm justify-center bg-foreground/20 items-stretch">
-            <h1 className="text-3xl font-bold p-1">{title??"List"}</h1>
+            <h1 className="text-3xl font-bold p-1" ref={refHeading}>{title??"List"}</h1>
             <div className="flex flex-col gap-2 p-2 justify-between items-stretch bg-black/40 rounded-sm">
                 {loading && <div className="inset-0 relative flex justify-center items-center"><Loader /></div>}
                 {
