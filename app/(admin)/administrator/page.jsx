@@ -87,11 +87,20 @@ const SHOW_CONFIG = Object.freeze([
 ])
 
 export default function Page(){
+    useEffect(() => {
+        window.scrollTo({
+        top: 0,
+        behavior: "instant"
+        });
+    }, []);
+
     return (
-        <div className="flex flex-col mt-20 divide-y divide-foreground/20">
+        <div className="flex flex-col mt-20 divide-y divide-foreground/20 min-h-full no-anchor">
             {SHOW_CONFIG.map((item) => (
                 <div key={item.TITLE} className="py-8">
-                    <Segment {...item} />
+                    <Lazysegment>
+                        <Segment {...item} />
+                    </Lazysegment>
                 </div>
             ))}
         </div>
