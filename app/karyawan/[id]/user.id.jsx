@@ -158,7 +158,7 @@ function User({id,name,email,bio,jabatan,mengajar}){
                                 </div>
 
                                 <div className=" border border-dotted">
-                                    <DriveObjCUD id={profilepic_id} option={"UPDATE"} skip={["category"]}/>
+                                    <DriveObjCUD id={profilepic_id} option={"UPDATE"} skip={["category","userId"]}/>
                                 </div>
                                 
                             </div>
