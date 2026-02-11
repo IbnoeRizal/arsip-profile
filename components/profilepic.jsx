@@ -28,6 +28,8 @@ export default function ProfilePic({id,w=300,h=300,fun}){
     const controller = useRef(null);
 
     useEffect(()=>{
+        if(!id) return;
+        
         let mounted = true;
         controller.current = new AbortController();
 
