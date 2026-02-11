@@ -3,7 +3,7 @@
 import Status from "@/components/status";
 import { useCallback, useEffect, useRef, useState } from "react"
 import ProfilePic from "@/components/profilepic";
-import Loading from "./loading";
+import Loader from "@/components/loading";
 import { useCredential } from "@/context/usercredential";
 import ThemeButton from "@/components/button";
 import {LogInIcon, UserPenIcon, XCircleIcon}from "lucide-react"
@@ -76,7 +76,9 @@ export default function GetUserInfo({id}){
 
     if(isLoading)
         return(
-            <Loading/>
+            <div className="fixed inset-0 flex justify-center items-center size-full">
+                <Loader/>
+            </div>
         )
 
     return(
@@ -151,14 +153,16 @@ function User({id,name,email,bio,jabatan,mengajar}){
                 <motion.div className="inset-20 size-fit m-auto fixed" drag dragConstraints={boundary} whileDrag={{backgroundColor:"rgba(0, 128, 0, 1)"}} onClick={(e)=>{e.stopPropagation()}}>
                     <div className="max-sm:m-2 sm:mt-2 max-sm:max-h-100 max-sm:overflow-y-scroll">
                         <div className="border border-dotted rounded-md p-5 flex flex-col gap-4 bg-background">
-                            <h2 className="text-2xl font-bold self-center border-b-2 border-dotted sticky top-0 bg-inherit w-full text-center"> Update </h2>
+                            <h2 className="text-2xl font-bold self-center border-b-2 border-dotted sticky top-0 bg-foreground/10 w-full text-center"> Form </h2>
                             <div className="sm:grid grid-cols-2 place-content-center place-items-stretch gap-2 *:rounded-sm *:p-2 flex flex-col ">
-                                <div className=" border border-dotted">
+                                <div className=" border border-dotted flex flex-col justify-center items-center gap-1">
+                                    <h3 className="text-[1.1rem] font-bold w-full text-center p-1 bg-foreground/10">{"Update Biodata"}</h3>
                                     <UserCUD id={id} option={"UPDATE"}/>
                                 </div>
 
-                                <div className=" border border-dotted">
-                                    <DriveObjCUD id={profilepic_id} option={"UPDATE"} skip={["category","userId"]}/>
+                                <div className=" border border-dotted flex flex-col justify-start items-center">
+                                    <h3 className="text-[1.1rem] font-bold w-full text-center p-1 bg-foreground/10">{profilepic_id ? "Update foto" : "Add foto"}</h3>
+                                    <DriveObjCUD id={profilepic_id} option={profilepic_id ? "UPDATE" : "CREATE"} skip={["category","userId"]}/>
                                 </div>
                                 
                             </div>
