@@ -3,6 +3,7 @@ import ShowDataof from "./_components/show_label_key";
 import { useState } from "react";
 import { XSquare } from "lucide-react";
 import ThemeButton from "@/components/button";
+import Lazysegment from "@/components/lazysegment";
 import { UserCUD } from "@/components/form/userCUD";
 import { DriveObjCUD } from "@/components/form/driveObjCUD";
 import { JabatanCUD } from "@/components/form/jabatanCUD";
@@ -10,8 +11,8 @@ import { KelasCUD } from "@/components/form/kelasCUD";
 import { MapelCUD } from "@/components/form/mapelCUD";
 import { MengajarCUD } from "@/components/form/mengajarCUD";
 import { VisiCUD } from "@/components/form/visiCUD";
-import Lazysegment from "@/components/lazysegment";
 import { useEffect } from "react";
+import { MisiCUD } from "@/components/form/misiCUD";
 
 const SHOW_CONFIG = Object.freeze([
     Object.freeze({
@@ -32,6 +33,16 @@ const SHOW_CONFIG = Object.freeze([
         }),
         FORM: VisiCUD,
         TITLE: "List Visi"
+    }),
+
+    Object.freeze({
+        SHOW : Object.freeze({
+            key:["id"],
+            label:["mision"],
+            source: "/api/school/misi",
+        }),
+        FORM: MisiCUD,
+        TITLE: "List Misi"
     }),
 
     Object.freeze({
