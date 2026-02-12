@@ -5,7 +5,8 @@ import { prismaError } from "@/lib/prismaErrorResponse";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { Role } from "@prisma/client";
 import { NextResponse } from "next/server";
-
+import { revalidateTag } from "next/cache";
+import { profile_pic } from "@/lib/cache_tags_name";
 /**
  * @param {import("next/server").NextRequest} request 
  * @param {{params:Promise<{id:string}>}} context
@@ -40,6 +41,7 @@ export async function PATCH(request,context) {
             }
         });
 
+        revalidateTag(profile_pic,"max")
         return NextResponse.json({data:driveObj},{status:st2xx.ok});
 
     }catch(e){
