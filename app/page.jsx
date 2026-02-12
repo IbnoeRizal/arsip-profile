@@ -12,6 +12,9 @@ export default async function Home() {
         select:{
           id: true,
           mision: true,
+        },
+        orderBy:{
+          order:"asc"
         }
       }
     }
