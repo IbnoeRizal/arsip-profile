@@ -1,5 +1,5 @@
 import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
-import { MISI_DELETE_BY_ADMIN, MISIONS_CREATE_BY_ADMIN } from "@/lib/authschema";
+import { MISI_CREATE_BY_ADMIN, MISI_DELETE_BY_ADMIN } from "@/lib/authschema";
 import { pagination } from "@/lib/pagination";
 import prisma from "@/lib/prisma";
 import { prismaError } from "@/lib/prismaErrorResponse";
@@ -18,7 +18,13 @@ export async function GET(request) {
             prisma.misi.findMany({
                 select:{
                     id:true,
-                    mision:true
+                    order:true,
+                    mision:true,
+                    visi:{
+                        select:{
+                            vision:true,
+                        }
+                    }
                 },
                 orderBy:{
                     order:"asc"
@@ -52,16 +58,17 @@ export async function POST(request) {
         
         requireRole(payload, [Role.ADMIN]);
 
-        const validated = MISIONS_CREATE_BY_ADMIN.safeParse(rawdata);
-        if(!validated.success)
+        const validated = MISI_CREATE_BY_ADMIN.safeParse(rawdata);
+        if(!validated.success){
+            console.table(validated.error)
             return NextResponse.json({data:validated.error},{status:st4xx.badRequest});
+        }
 
-        const misions = await prisma.misi.createMany({
+        const misions = await prisma.misi.create({
             data:validated.data,
-            skipDuplicates: true,
         });
 
-        return NextResponse.json({data:`${misions} record berhasil dibuat`},{status:st2xx.created});       
+        return NextResponse.json({data:`${misions.mision} berhasil dibuat`},{status:st2xx.created});       
     }catch(e){
         const knownErr = authError(e)??prismaError(e);
         if(knownErr) return knownErr;
