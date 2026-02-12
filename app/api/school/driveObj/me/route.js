@@ -2,7 +2,7 @@ import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { st2xx, st5xx } from "@/lib/responseCode";
-import { Role } from "@prisma/client";
+import { Role } from "@/generated/prisma/enums";
 import { NextResponse } from "next/server";
 
 

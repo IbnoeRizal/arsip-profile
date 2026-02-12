@@ -4,7 +4,7 @@ import { pagination } from "@/lib/pagination";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { requireRole, getUserFromRequest, authError } from "@/lib/auth";
-import { Role } from "@prisma/client";
+import { Role } from "@/generated/prisma/enums";
 import { flaterr, USER_CREATE_BY_ADMIN, USER_DELETE_BY_ADMIN } from "@/lib/authschema";
 import { hasherpass } from "@/lib/hashpass";
 import { revalidateTag } from "next/cache";

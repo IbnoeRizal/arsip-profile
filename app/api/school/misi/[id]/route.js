@@ -3,7 +3,7 @@ import { MISI_UPDATE_BY_ADMIN, MISIONS_CREATE_BY_ADMIN } from "@/lib/authschema"
 import prisma from "@/lib/prisma";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
-import { Role } from "@prisma/client";
+import { Role } from "@/generated/prisma/enums";
 import { NextResponse } from "next/server";
 
 /**

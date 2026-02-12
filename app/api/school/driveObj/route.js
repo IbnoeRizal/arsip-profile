@@ -5,7 +5,7 @@ import { pagination } from "@/lib/pagination";
 import prisma from "@/lib/prisma";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
-import { Role } from "@prisma/client";
+import { Role } from "@/generated/prisma/enums";
 import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 

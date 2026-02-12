@@ -4,7 +4,7 @@ import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { NextResponse } from "next/server";
 import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
 import { prismaError } from "@/lib/prismaErrorResponse";
-import { Role } from "@prisma/client";
+import { Role } from "@/generated/prisma/enums";
 import { hasherpass } from "@/lib/hashpass";
 import { revalidateTag, unstable_cache } from "next/cache";
 import { cached_get_by_id } from "@/lib/cache_tags_name";

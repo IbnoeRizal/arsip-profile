@@ -2,7 +2,7 @@ import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
 import { KELAS_CREATE_BY_ADMIN } from "@/lib/authschema";
 import prisma from "@/lib/prisma";
 import { st2xx, st4xx } from "@/lib/responseCode";
-import { Role } from "@prisma/client";
+import { Role } from "@/generated/prisma/enums";
 import { NextResponse } from "next/server";
 
 
