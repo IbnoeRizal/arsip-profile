@@ -98,7 +98,7 @@ export async function DELETE(request) {
             }
         });
 
-        return NextResponse({data:visi},{status:st2xx.ok});       
+        return NextResponse.json({data:visi},{status:st2xx.ok});       
     }catch(e){
         const knownErr = authError(e)??prismaError(e);
         if(knownErr) return knownErr;
