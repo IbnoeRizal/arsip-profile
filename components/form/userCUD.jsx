@@ -3,6 +3,7 @@ import { Role,Prisma } from "@/generated/prisma/browser";
 import schemaToFields from "@/lib/schemaToFields";
 import { USER_CREATE_BY_ADMIN, USER_DELETE_BY_ADMIN, USER_PATCH_BY_ADMIN, USER_PATCH_BY_USER } from "@/lib/authschema";
 import { MergeDynaform } from "./dynamicform/mergerform";
+import { useCredential } from "@/context/usercredential";
 
 /**@type {{ [key: string]: import("@/components/form/dynamicform/dynamicform").Field }}  */
 const userConfig = Object.preventExtensions({
@@ -108,6 +109,9 @@ const REQUEST_MODE = Object.freeze({
  * @returns {import("react").JSX.Element}
  */
 export function UserCUD({option,id,skip,fun}){
+    const credential = useCredential();
+    if(credential.id === id)
+        id = "me";
     return <MergeDynaform 
         id={id} 
         option={option} 
