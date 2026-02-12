@@ -2,14 +2,18 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import ThemeButton from "@/components/button";
-import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from "lucide-react";
+import { 
+  ArrowLeftCircleIcon, 
+  ArrowRightCircleIcon,
+  Trash2Icon,
+} from "lucide-react";
 
 /**
  * @typedef {{
  *  label: string
  *  name: string
  *  type?: import("react").HTMLInputTypeAttribute
- *  as?: "input" | "select" | "textarea"
+ *  as?: "input" | "select" | "textarea" | "massInput"
  *  options?: { label: string, value: string | number }[]
  *  parse?: (value:any)=>any,
  *  required?: boolean,
@@ -97,7 +101,7 @@ export default function DynamicForm({ fields, onSubmit }) {
       }
 
       return{
-        ...prev,
+        ...next,
         [field.name] : value
       }
     });
@@ -187,6 +191,16 @@ export default function DynamicForm({ fields, onSubmit }) {
               required={field.required ?? true}
             />
           )}
+
+          {/* MASS INPUT */}
+          {field.as === "massInput" &&(
+            <CreateModalSelector
+              callback={handleChange}
+              field={field}
+              key={field.name}
+            />
+          )}
+
         </div>
       ))}
 
@@ -357,4 +371,109 @@ function CreateModalSelector({field,callback}) {
     </select>
   )
 
+}
+
+function Massmodal({field,callback}){
+  const [refresh,setRefresh] = useState(true);
+  const [visibleTool, setVisibleTool] = useState(true);
+
+  const memo = useRef(new Set());
+  const data = useRef([]);
+  /**@type {import("react").InputHTMLAttributes} */
+  const input = useRef(null)
+
+  function del(i){
+    delete data.current[i];
+    memo.current.add(i);
+    setRefresh(prev=>!prev);
+  }
+
+  function addnew(){
+    if(!input.current)
+      return;
+    
+    const val = input.current.value;
+
+    if(memo.current.size > 0){
+      const available = memo.current.values().next().value;
+      data.current[available] = val;
+      memo.current.delete(available);
+      
+    }else{
+      data.current.push(val);
+    }
+    setRefresh(prev=>!prev);
+
+  }
+
+  function ok(){
+    const filtered = data.current.flat();
+    console.table(field);
+    callback?.(field,{target:{value:filtered}});
+    setVisibleTool(false);
+  }
+
+  return (
+    <div 
+      className="flex flex-col p-2 gap-2 justify-center items-center"
+      onClick={e=>{
+        e.stopPropagation();
+        setVisibleTool(true);
+      }}
+    >
+      {
+        data.current?.map((item,idx)=>
+          {
+            if(item == null) return;
+
+            return (
+              <div className="flex flex-row gap-1" key={idx}>
+                <input type="text" value={item} disabled={true} className="flex-4"/>
+                <Trash2Icon onClick={()=>del(idx)}/>
+              </div>
+            )
+          }
+        )
+      }
+      {visibleTool &&
+        <>
+          <div>
+
+            <input 
+              type="text" 
+              placeholder="input disini" 
+              ref={input}
+            />
+
+            <button 
+              type="button" 
+              className="p-2 rounded-md bg-green-900/40" 
+              onClick={
+                ()=>addnew()
+              }
+            >
+                Add
+            </button>
+          </div>
+
+          <div id="buttongroup" className="flex flex-row justify-between items-stretch">
+
+            <button 
+              type="button" 
+              className="p-2 rounded-md bg-green-900/40" 
+              onClick={
+                (e)=>{
+                  e.stopPropagation();
+                  ok()
+                }
+              }
+            >
+              Ok
+            </button>
+
+          </div>
+        </>
+      }
+    </div>
+  )
 }
