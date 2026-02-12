@@ -45,8 +45,8 @@ export default function ShowDataof({config, title, fun}){
     //set the pagination setting
     const [display,setDisplay] = useState({
         page: 1,
-        limit: 4,
-        total : 4
+        limit: 10,
+        total : 10
     });
     
     //set the page state, loading or loaded
