@@ -162,7 +162,7 @@ function User({id,name,email,bio,jabatan,mengajar}){
 
                                 <div className=" border border-dotted flex flex-col justify-start items-center">
                                     <h3 className="text-[1.1rem] font-bold w-full text-center p-1 bg-foreground/10">{profilepic_id ? "Update foto" : "Add foto"}</h3>
-                                    <DriveObjCUD id={profilepic_id} option={profilepic_id ? "UPDATE" : "CREATE"} skip={["category","userId"]}/>
+                                    <DriveObjCUD id={profilepic_id} option={profilepic_id ? "UPDATE" : "CREATE"} skip={["category","userId"]} default={{userId :id, category:"POFILEPIC"}}/>
                                 </div>
                                 
                             </div>

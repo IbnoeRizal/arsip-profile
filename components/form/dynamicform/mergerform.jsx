@@ -17,10 +17,11 @@ import Loader from "@/components/loading";
  *      REQUEST_MODE:object, 
  *      STATUS_KEY_REACT:string
  *      fun : Function | null | undefined
+ *      default?: Record<string,string|number>
  * }} param0 
  * @returns {import("react").JSX.Element}
  */
-export function MergeDynaform({ option, id, skip, REFINED_FIELDS, REQUEST_MODE, STATUS_KEY_REACT, fun}) {
+export function MergeDynaform({ option, id, skip, REFINED_FIELDS, REQUEST_MODE, STATUS_KEY_REACT, fun, default:defaultData = {}}) {
     const userCredential = useCredential();
     const [optionForm, setOptionForm] = useState(REFINED_FIELDS[option] ?? null);
     const [isLoading, setLoading] = useState(false);
@@ -86,13 +87,16 @@ export function MergeDynaform({ option, id, skip, REFINED_FIELDS, REQUEST_MODE, 
         let temp = field;
 
         //skip element cetrtain fields
-        if (skip?.includes(temp.name))
-            continue;
+        if (skip?.includes(temp.name)){
+            temp.type = "hidden"
+        }
 
         // add default value for id
         if (temp.name === "id") {
             temp = Object.create(field);
             temp.default = id;
+        }else if(defaultData[temp.name]){
+            temp = {...temp, default:defaultData[temp.name]};
         }
 
 

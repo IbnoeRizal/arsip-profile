@@ -61,6 +61,7 @@ const REFINED_FIELDS = Object.freeze({
 
     UPDATE: Object.freeze({
         ADMIN : schemaToFields(DRIVEOBJ_UPDATE_BY_ADMIN,driveConfig),
+        USER  : schemaToFields(DRIVEOBJ_UPDATE_BY_ADMIN,driveConfig),
     }),
 
     DELETE: Object.freeze({
@@ -92,11 +93,12 @@ const REQUEST_MODE = Object.freeze({
  *      id       : string, 
  *      skip?    : Prisma.DriveObjScalarFieldEnum[]
  *      fun?     : Function
+ *      default? : Record<Prisma.DriveObjScalarFieldEnum,string|number>
  * }} param0 
  * 
  * @returns {import("react").JSX.Element}
  */
-export function DriveObjCUD({option,id,skip,fun}){
+export function DriveObjCUD({option,id,skip,fun,default:defaultData = {}}){
  
     return(
         <MergeDynaform 
@@ -107,6 +109,7 @@ export function DriveObjCUD({option,id,skip,fun}){
             REQUEST_MODE={REQUEST_MODE}
             STATUS_KEY_REACT={STATUS_KEY_REACT}
             fun={fun}
+            default={defaultData}
         />
     )
 }
