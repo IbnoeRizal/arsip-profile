@@ -1,12 +1,11 @@
 import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
 import { DRIVEOBJ_CREATE_BY_ADMIN, DRIVEOBJ_DELETE_BY_ADMIN, flaterr } from "@/lib/authschema";
-import { profile_pic } from "@/lib/cache_tags_name";
+import { PROFLE_PIC } from "@/lib/server_cache/cache_tags_name";
 import { pagination } from "@/lib/pagination";
 import prisma from "@/lib/prisma";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { Role } from "@/generated/prisma/enums";
-import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 /**
@@ -116,7 +115,7 @@ export async function DELETE(request) {
             }
         });
 
-        revalidateTag(profile_pic,"max");
+        PROFLE_PIC.revalidate();
         return NextResponse.json({data:driveObj},{status:st2xx.ok});
 
     }catch(e){

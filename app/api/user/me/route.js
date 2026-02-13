@@ -6,8 +6,7 @@ import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { Role } from "@/generated/prisma/enums";
 import { hasherpass } from "@/lib/hashpass";
-import { revalidateTag } from "next/cache";
-import { cached_get_by_id } from "@/lib/cache_tags_name";
+import { USER_GET_BY_ID } from "@/lib/server_cache/cache_tags_name";
 
 /**
  * @param {import("next/server").NextRequest} request
@@ -68,7 +67,7 @@ export async function PATCH(request) {
             }
         })
 
-        revalidateTag(cached_get_by_id,"max");
+        USER_GET_BY_ID.revalidate();
         return NextResponse.json({data:user},{status:st2xx.ok});
     
     }catch(e){

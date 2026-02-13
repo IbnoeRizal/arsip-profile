@@ -1,26 +1,8 @@
 //@ts-check
-import prisma from "@/lib/prisma";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { NextResponse } from "next/server";
-import { unstable_cache } from "next/cache";
-import { profile_pic } from "@/lib/cache_tags_name";
-
-const getProfilePic = unstable_cache(
-  async (id) => {
-    return prisma.driveObj.findFirst({
-      select: {
-        link: true,
-      },
-      where: {
-        userId: id,
-        category: "POFILEPIC",
-      },
-    });
-  },
-  [profile_pic],
-  { revalidate: 360 }
-);
+import { PROFLE_PIC } from "@/lib/server_cache/cache_tags_name";
 
 /**
  * 
@@ -52,7 +34,7 @@ export async function GET(request, context) {
   try {
     const { id } = await context.params;
 
-    const profilepic = await getProfilePic(id);
+    const profilepic = await PROFLE_PIC.getProfilePic(id);
 
     if (!profilepic?.link) {
       return NextResponse.json({data:"Not Found"}, { status: st4xx.notFound });
@@ -76,7 +58,7 @@ export async function GET(request, context) {
     return new NextResponse(res.body, {
       status: st2xx.ok,
       headers: {
-        "Content-Type": res.headers.get("content-type"),
+        "Content-Type": res.headers.get("content-type") ?? "text",
         "Cache-Control":
           "public, s-maxage=360, stale-while-revalidate=86400",
       },

@@ -6,43 +6,7 @@ import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { Role } from "@/generated/prisma/enums";
 import { hasherpass } from "@/lib/hashpass";
-import { revalidateTag, unstable_cache } from "next/cache";
-import { cached_get_by_id } from "@/lib/cache_tags_name";
-
-const cached = unstable_cache(async(id)=>{
-        return await prisma.user.findUniqueOrThrow({
-            where:{id},
-            select:{
-                name:true,
-                email:true,
-                bio:true,
-                jabatan:{
-                    select:{
-                        title:true,   
-                    }
-                },
-                mengajar:{
-                    select:{
-                        kelas:{
-                            select:{
-                                nama:true
-                            },
-                        },
-                        mapel:{
-                            select:{
-                                nama:true
-                            }
-                        }
-                    }
-                },
-            }
-        })
-    },["get-user-byId"],
-    {
-        tags:[cached_get_by_id],
-        revalidate:300
-    }
-)
+import { USER_GET_BY_ID } from "@/lib/server_cache/cache_tags_name";
 
 /**
  * @param {import("next/server").NextRequest} request 
@@ -52,7 +16,7 @@ const cached = unstable_cache(async(id)=>{
 export async function GET(request,context) {
     const {id} = await context.params
     try{
-        const user = await cached(id);
+        const user = await USER_GET_BY_ID.getUser(id);
         return NextResponse.json({data:user},{status:st2xx.ok});
     }catch(e){
         console.error(e);
@@ -119,7 +83,7 @@ export async function PATCH(request,context) {
             }
         })
 
-        revalidateTag(cached_get_by_id,"max");
+        USER_GET_BY_ID.revalidate();
         return NextResponse.json({data:user},{status:st2xx.ok});
     
     }catch(e){
