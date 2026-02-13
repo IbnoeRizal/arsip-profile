@@ -24,9 +24,9 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overscroll-x-none`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overscroll-x-none h-full`}
       >
         <Suspense fallback={<Loading/>}>
           <GetCredential>
