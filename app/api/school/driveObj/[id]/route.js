@@ -5,8 +5,7 @@ import { prismaError } from "@/lib/prismaErrorResponse";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { Role } from "@/generated/prisma/enums";
 import { NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
-import { profile_pic } from "@/lib/cache_tags_name";
+import { PROFLE_PIC } from "@/lib/server_cache/cache_tags_name";
 /**
  * @param {import("next/server").NextRequest} request 
  * @param {{params:Promise<{id:string}>}} context
@@ -20,7 +19,21 @@ export async function PATCH(request,context) {
             request.json()
         ]);
 
-        requireRole(payload,[Role.ADMIN]);
+        requireRole(payload,[Role.ADMIN, Role.USER]);
+        if(payload.role === Role.USER){
+            const isowned = prisma.driveObj.findUnique({
+                where:{
+                    id:id,
+                    user:{
+                        id:payload.id
+                    },
+                },
+            });
+
+            if(!isowned)
+                return NextResponse.json({data:"FORBIDDEN"},{status:st4xx.forbidden});
+
+        }
         const validated = DRIVEOBJ_UPDATE_BY_ADMIN.safeParse(rawdata);
 
         if(!validated.success)
@@ -41,7 +54,7 @@ export async function PATCH(request,context) {
             }
         });
 
-        revalidateTag(profile_pic,"max")
+        PROFLE_PIC.revalidate();
         return NextResponse.json({data:driveObj},{status:st2xx.ok});
 
     }catch(e){

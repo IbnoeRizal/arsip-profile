@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { UserCircle2Icon } from "lucide-react";
+import { UserCircle2Icon, X } from "lucide-react";
 import Image from "next/image";
 
 const STATUS = {
@@ -25,8 +25,25 @@ export default function ProfilePic({
 
     setSrc(url);
     setStatus(STATUS.OK);
+    const controller = new AbortController();
 
-    fun?.(id);
+    async function getfileMeta() {
+      try{
+        const response = await fetch(url+"/meta",{signal:controller.signal});
+        if(response.ok){
+          const data = await response.json();
+          fun?.(data);
+        }
+      }catch(e){
+        if(e.name !== "AbortError" && process.env.NODE_ENV !== "production")
+          console.error(e);
+
+      }
+    }
+
+    getfileMeta();
+
+    return ()=>controller.abort();
   }, [id, fun]);
 
   return (
