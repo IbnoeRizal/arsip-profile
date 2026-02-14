@@ -21,12 +21,10 @@ export async function PATCH(request,context) {
 
         requireRole(payload,[Role.ADMIN, Role.USER]);
         if(payload.role === Role.USER){
-            const isowned = prisma.driveObj.findUnique({
+            const isowned = prisma.driveObj.findFirst({
                 where:{
-                    id:id,
-                    user:{
-                        id:payload.id
-                    },
+                    id,
+                    userId: payload.id
                 },
             });
 
