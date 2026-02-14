@@ -32,7 +32,7 @@ export default function ProfilePic({
         const response = await fetch(url+"/meta",{signal:controller.signal});
         if(response.ok){
           const data = await response.json();
-          fun?.(data);
+          fun?.(data.data);
         }
       }catch(e){
         if(e.name !== "AbortError" && process.env.NODE_ENV !== "production")
