@@ -41,7 +41,8 @@ export default function ProfilePic({
       }
     }
 
-    getfileMeta();
+    if(typeof fun === "function")
+      getfileMeta();
 
     return ()=>controller.abort();
   }, [id, fun]);
