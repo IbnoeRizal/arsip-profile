@@ -28,15 +28,41 @@ masukkan email yang terdaftar dan passwordnya, klik ok, kemudian tunggu hingga m
 status login disimpan di dalam cookie browser, tidak bisa dibaca oleh javascript. pengecekan status login terjadi di sisi server
 
 
+## Profile Picture
+
+untuk menampilkan profile picture, hak akses dari googledrive harus di set ke `semua yang memiliki link dapat melihat` atau lebih.
+
+
 ## File
 
 file yang terkait denga user akan ditampilkan setelah login, file yang ditampilkan merupakan link yang telah disimpan admin.
 
 > [!NOTE]
-> Mengeklik File atau Folder yang ditampilkan akan membawa user ke lokasi objek tersebut berada. (redirected)
+> Mengklik File atau Folder yang ditampilkan akan membawa user ke lokasi objek tersebut berada. (redirected)
+
 
 
 ![daftar_file](./picture/daftar_file.png)
+
+> menahan selama 0.5 detik akan mengaktifkan mode edit 
+
+<details>
+    <summary>Edit</summary>
+
+![daftar_file](./picture/klik_dan_tahan.png)
+
+tahan file selama 0.5 detik
+</details>
+
+<details>
+    <summary>Tambah</summary>
+
+![daftar_file](./picture/klik_tambah_file.png)
+
+klik tambah `+`
+</details>
+
+> tap dibagian luar formulir untuk keluar mode
 
 ## Administrator
 
@@ -44,7 +70,7 @@ Setelah Login, ketika teridentifikasi sebagai `ADMIN` bar `navigasi` akan menunj
 
 ![halaman administrator](./picture/halaman_administrator.png)
 
-### Formulir 
+## Formulir 
 
 formulir digunakan untuk membuat data baru, mengedit data lama, atau menghapus data yang ada.
 
