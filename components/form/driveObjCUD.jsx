@@ -1,7 +1,7 @@
 'use client'
 import { Prisma, $Enums } from "@/generated/prisma/browser";
 import schemaToFields from "@/lib/schemaToFields";
-import { DRIVEOBJ_CREATE_BY_ADMIN, DRIVEOBJ_DELETE_BY_ADMIN, DRIVEOBJ_UPDATE_BY_ADMIN } from "@/lib/authschema";
+import { DRIVEOBJ_CREATE, DRIVEOBJ_DELETE, DRIVEOBJ_UPDATE } from "@/lib/authschema";
 import { MergeDynaform } from "./dynamicform/mergerform";
 
 
@@ -56,16 +56,19 @@ for(const item in driveItems){
 // filled with refined fields zodauthentication + configuration
 const REFINED_FIELDS = Object.freeze({
     CREATE: Object.freeze({
-        ADMIN : schemaToFields(DRIVEOBJ_CREATE_BY_ADMIN,driveConfig)
+        ADMIN : schemaToFields(DRIVEOBJ_CREATE,driveConfig),
+        USER : schemaToFields(DRIVEOBJ_CREATE,driveConfig)
+
     }),
 
     UPDATE: Object.freeze({
-        ADMIN : schemaToFields(DRIVEOBJ_UPDATE_BY_ADMIN,driveConfig),
-        USER  : schemaToFields(DRIVEOBJ_UPDATE_BY_ADMIN,driveConfig),
+        ADMIN : schemaToFields(DRIVEOBJ_UPDATE,driveConfig),
+        USER  : schemaToFields(DRIVEOBJ_UPDATE,driveConfig),
     }),
 
     DELETE: Object.freeze({
-        ADMIN : schemaToFields(DRIVEOBJ_DELETE_BY_ADMIN,driveConfig)
+        ADMIN : schemaToFields(DRIVEOBJ_DELETE,driveConfig),
+        USER : schemaToFields(DRIVEOBJ_DELETE,driveConfig),
     })
 });
 
