@@ -1,5 +1,5 @@
 import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
-import { DRIVEOBJ_UPDATE_BY_ADMIN, flaterr } from "@/lib/authschema";
+import { DRIVEOBJ_UPDATE, flaterr } from "@/lib/authschema";
 import prisma from "@/lib/prisma";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
@@ -32,7 +32,7 @@ export async function PATCH(request,context) {
                 return NextResponse.json({data:"FORBIDDEN"},{status:st4xx.forbidden});
 
         }
-        const validated = DRIVEOBJ_UPDATE_BY_ADMIN.safeParse(rawdata);
+        const validated = DRIVEOBJ_UPDATE.safeParse(rawdata);
 
         if(!validated.success)
             return NextResponse.json({data:flaterr(validated.error)},{status:st4xx.badRequest});

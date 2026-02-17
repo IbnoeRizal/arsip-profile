@@ -1,5 +1,5 @@
 import { authError, getUserFromRequest, requireRole } from "@/lib/auth";
-import { DRIVEOBJ_CREATE_BY_ADMIN, DRIVEOBJ_DELETE_BY_ADMIN, flaterr } from "@/lib/authschema";
+import { DRIVEOBJ_CREATE, DRIVEOBJ_DELETE, flaterr } from "@/lib/authschema";
 import { PROFLE_PIC } from "@/lib/server_cache/cache_tags_name";
 import { pagination } from "@/lib/pagination";
 import prisma from "@/lib/prisma";
@@ -60,14 +60,20 @@ export async function POST(request) {
             request.json()
         ])
 
-        requireRole(payload,[Role.ADMIN]);
-        const validated = DRIVEOBJ_CREATE_BY_ADMIN.safeParse(rawdata);
+        requireRole(payload,[Role.ADMIN, Role.USER]);
+        const validated = DRIVEOBJ_CREATE.safeParse(rawdata);
 
         if(!validated.success)
             return NextResponse.json({data:flaterr(validated.error)},{status:st4xx.badRequest});
 
+        const filter = {...validated.data};
+
+        if(payload.role === Role.USER){
+            filter.userId = payload.id;
+        }
+
         const driveObj = await prisma.driveObj.create({
-            data:validated.data,
+            data:filter,
             select:{
                 id:true,
                 link:true,
@@ -102,14 +108,17 @@ export async function DELETE(request) {
             request.json()
         ])
 
-        requireRole(payload,[Role.ADMIN]);
-        const validated = DRIVEOBJ_DELETE_BY_ADMIN.safeParse(rawdata);
+        requireRole(payload,[Role.ADMIN,Role.USER]);
+        const validated = DRIVEOBJ_DELETE.safeParse(rawdata);
 
         if(!validated.success)
             return NextResponse.json({data:flaterr(validated.error)},{status:st4xx.badRequest});
 
         const driveObj = await prisma.driveObj.delete({
-            where:{id:validated.data.id},
+            where:{
+                id:validated.data.id,
+                userId: payload.role === Role.USER ? payload.id : undefined,
+            },
             select:{
                 id:true,
             }
