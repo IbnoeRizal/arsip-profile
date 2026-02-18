@@ -61,7 +61,7 @@ export default function ProfilePic({
           className="w-full h-full object-cover"
           onError={() => setStatus(STATUS.ERROR)}
           unoptimized
-          priority
+          priority={false}
         />
       )}
 
