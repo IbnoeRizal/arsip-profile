@@ -6,6 +6,8 @@ import { prismaError } from "@/lib/prismaErrorResponse";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { Role } from "@/generated/prisma/enums";
 import { NextResponse } from "next/server";
+import { filterQuery } from "@/lib/filterQuery";
+import { Prisma } from "@/generated/prisma/browser";
 
 /**
  * @param {import("next/server").NextRequest} request 
@@ -14,6 +16,7 @@ import { NextResponse } from "next/server";
 export async function GET(request) {
     try{
         const {page,limit} =  pagination(request);
+        const where = filterQuery(request,Prisma.ModelName.Mapel);
 
         const mapels = await Promise.all([
             prisma.mapel.findMany({
@@ -25,9 +28,10 @@ export async function GET(request) {
                     nama:"asc"
                 },
                 take:limit,
-                skip:limit*page
+                skip:limit*page,
+                where
             }),
-            prisma.kelas.count()
+            prisma.kelas.count({where})
         ]);
 
         return NextResponse.json({data:mapels},{status:st2xx.ok});

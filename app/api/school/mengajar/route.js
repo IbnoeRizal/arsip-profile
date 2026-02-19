@@ -7,16 +7,21 @@ import { NextResponse } from "next/server";
 import { authError } from "@/lib/auth";
 import { prismaError } from "@/lib/prismaErrorResponse";
 import { flaterr, MENGAJAR_CREATE_BY_ADMIN, MENGAJAR_DELETE_BY_ADMIN } from "@/lib/authschema";
+import { filterQuery } from "@/lib/filterQuery";
+import { Prisma } from "@/generated/prisma/browser";
 
 /**
  * @param {import("next/server").NextRequest} request 
  * @returns {Promise<NextResponse>}
  */
 export async function GET(request) {
-    const payload = await getUserFromRequest(request);
     try{
+        const [payload,{page,limit},where] = await Promise.all([
+            getUserFromRequest(request),
+            pagination(request),
+            filterQuery(request,Prisma.ModelName.Mengajar)
+        ])
         requireRole(payload, [Role.ADMIN]);
-        const {page,limit} = pagination(request);
         
         const mengajar = await Promise.all([
             prisma.mengajar.findMany({
@@ -44,9 +49,10 @@ export async function GET(request) {
                     }
                 },
                 take:limit,
-                skip:page*limit
+                skip:page*limit,
+                where
             }),
-            prisma.mengajar.count()
+            prisma.mengajar.count({where})
         ]);
 
         return NextResponse.json({data:mengajar},{status:st2xx.ok});

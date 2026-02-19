@@ -6,6 +6,8 @@ import { prismaError } from "@/lib/prismaErrorResponse";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { Role } from "@/generated/prisma/enums";
 import { NextResponse } from "next/server";
+import { filterQuery } from "@/lib/filterQuery";
+import { Prisma } from "@/generated/prisma/browser";
 
 /**
  * @param {import("next/server").NextRequest} request 
@@ -13,9 +15,10 @@ import { NextResponse } from "next/server";
  */
 export async function GET(request) {
     try{
-        const [payload,{page,limit}] = await Promise.all([
+        const [payload,{page,limit},where] = await Promise.all([
             getUserFromRequest(request),
-            pagination(request)
+            pagination(request),
+            filterQuery(request,Prisma.ModelName.Jabatan)
         ]);
 
         requireRole(payload, [Role.ADMIN]);
@@ -27,9 +30,10 @@ export async function GET(request) {
                     title:true,
                 },
                 take:limit,
-                skip:page*limit
+                skip:page*limit,
+                where
             }),
-            prisma.jabatan.count()
+            prisma.jabatan.count({where})
         ]);
 
         return NextResponse.json({data:jabatans},{status:st2xx.ok});

@@ -6,6 +6,8 @@ import { prismaError } from "@/lib/prismaErrorResponse";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { Role } from "@/generated/prisma/enums";
 import { NextResponse } from "next/server";
+import { filterQuery } from "@/lib/filterQuery";
+import { Prisma } from "@/generated/prisma/browser";
 
 /**
  * @param {import("next/server").NextRequest} request
@@ -14,6 +16,8 @@ import { NextResponse } from "next/server";
 export async function GET(request) {
     try{
         const {page,limit} = pagination(request);
+        const where = filterQuery(request,Prisma.ModelName.Visi);
+
         const visions = await Promise.all([
             prisma.visi.findMany({
                 select:{
@@ -21,9 +25,10 @@ export async function GET(request) {
                     vision:true
                 },
                 take:limit,
-                skip:page*limit
+                skip:page*limit,
+                where
             }),
-            prisma.visi.count()
+            prisma.visi.count({where})
         ]);
 
         return NextResponse.json({data:visions},{status:st2xx.ok});

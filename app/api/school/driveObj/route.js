@@ -7,6 +7,8 @@ import { prismaError } from "@/lib/prismaErrorResponse";
 import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { Role } from "@/generated/prisma/enums";
 import { NextResponse } from "next/server";
+import { filterQuery } from "@/lib/filterQuery";
+import { Prisma } from "@/generated/prisma/browser";
 
 /**
  * @param {import("next/server").NextRequest} request
@@ -14,9 +16,10 @@ import { NextResponse } from "next/server";
  */
 export async function GET(request) {
     try{
-        const [payload,{page,limit}] = await Promise.all([
+        const [payload,{page,limit},where] = await Promise.all([
             getUserFromRequest(request),
-            pagination(request)
+            pagination(request),
+            filterQuery(request,Prisma.ModelName.DriveObj)
         ]);
         
         requireRole(payload, [Role.ADMIN]);
@@ -35,9 +38,10 @@ export async function GET(request) {
                     category:true
                 },
                 take:limit,
-                skip:page * limit
+                skip:page * limit,
+                where
             }),
-            prisma.driveObj.count()
+            prisma.driveObj.count({where})
         ]);
 
         return NextResponse.json({data:[driveObj,total]},{status:st2xx.ok});

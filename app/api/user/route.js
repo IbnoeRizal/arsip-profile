@@ -8,6 +8,8 @@ import { Role } from "@/generated/prisma/enums";
 import { flaterr, USER_CREATE_BY_ADMIN, USER_DELETE_BY_ADMIN } from "@/lib/authschema";
 import { hasherpass } from "@/lib/hashpass";
 import { USER_GET_BY_ID } from "@/lib/server_cache/cache_tags_name";
+import { filterQuery } from "@/lib/filterQuery";
+import { Prisma } from "@/generated/prisma/browser";
 
 /**
  * @param {import("next/server").NextRequest} request 
@@ -15,6 +17,7 @@ import { USER_GET_BY_ID } from "@/lib/server_cache/cache_tags_name";
  */
 export async function GET(request) {
     const {page,limit} = pagination(request);
+    const where = filterQuery(request,Prisma.ModelName.User)
 
     try{
         const [users,total] = await Promise.all([
@@ -31,9 +34,10 @@ export async function GET(request) {
                     role:true,
                 },
                 take: limit,
-                skip: page * limit
+                skip: page * limit,
+                where
             }),
-            prisma.user.count()
+            prisma.user.count({where})
         ]);
 
         return NextResponse.json({data:[users,total]},{status:st2xx.ok});
