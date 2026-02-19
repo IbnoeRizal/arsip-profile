@@ -9,9 +9,10 @@
     "start": "next start",
     "lint": "eslint",
     "db-local:look": "dotenv -e .env.local -- prisma studio",
-    "db-prod:look": "dotenv -e .env -- prisma studio",
+    "db-prod:look": "dotenv -e .env.production -- prisma studio",
     "db-local:seed": "dotenv -e .env.local prisma db seed",
-    "postinstall": "prisma generate && ./lib/indexFromSchema.js"
+    "postinstall": "prisma generate && tsx ./lib/indexFromSchema.js",
+    "generate_indexFromSchema" : "dotenv -e .env.local -- tsx ./lib/indexFromSchema.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
