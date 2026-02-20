@@ -15,13 +15,10 @@ import { Prisma } from "@/generated/prisma/browser";
  */
 export async function GET(request) {
     try{
-        const [payload,{page,limit},where] = await Promise.all([
-            getUserFromRequest(request),
+        const [{page,limit},where] = await Promise.all([
             pagination(request),
             filterQuery(request,Prisma.ModelName.Jabatan)
         ]);
-
-        requireRole(payload, [Role.ADMIN]);
 
         const jabatans = await Promise.all([
             prisma.jabatan.findMany({
