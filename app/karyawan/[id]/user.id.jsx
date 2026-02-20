@@ -150,8 +150,8 @@ function User({id,name,email,bio,jabatan,mengajar}){
 
            
             {visibleChild && can_edit && 
-                <motion.div className="inset-20 h-full w-fit m-auto fixed overflow-y-visible" drag dragConstraints={boundary} whileDrag={{backgroundColor:"rgba(0, 128, 0, 1)"}} onClick={(e)=>{e.stopPropagation()}}>
-                    <div className="max-sm:m-2 sm:mt-2 max-sm:max-h-100 overflow-y-scroll">
+                <motion.div className="inset-20 h-fit w-fit m-auto fixed overflow-visible" drag dragConstraints={boundary} whileDrag={{backgroundColor:"rgba(0, 128, 0, 1)"}} onClick={(e)=>{e.stopPropagation()}} style={{contain:"none"}}>
+                    <div className="max-sm:m-2 sm:mt-2 max-sm:max-h-100 max-sm:overflow-scroll">
                         <div className="border border-dotted rounded-md p-5 flex flex-col gap-4 bg-background">
                             <h2 className="text-2xl font-bold self-center border-b-2 border-dotted sticky top-0 bg-foreground/10 w-full text-center"> Form </h2>
                             <div className="sm:grid grid-cols-2 place-content-center place-items-stretch gap-2 *:rounded-sm *:p-2 flex flex-col ">

@@ -136,8 +136,8 @@ export default function DynamicForm({ fields, onSubmit, compact = false }) {
 
   return (
     <form onSubmit={handleSubmit}  
-      style={compact ? {gridTemplateColumns: `repeat(auto-fit, minmax(min(140px, 100%), 1fr))`, maxWidth: `${fields.filter(f=>f.type!=="hidden").length * 160}px`} : undefined}
-      className={compact ? "grid gap-2 w-full bg-black/50 font-bold p-2 rounded-md text-white" : "flex flex-col gap-4 justify-center items-stretch"
+      style={compact ? {gridTemplateColumns: `repeat(auto-fit, minmax(min(140px, 100%), 1fr))`, maxWidth: `min(${fields.filter(f=>f.type!=="hidden").length * 160}px, 100%)`} : undefined}
+      className={compact ? "grid gap-2 w-full dark:bg-blue-500/5 bg-red-500/5  font-bold p-2 rounded-md" : "flex flex-col gap-4 justify-center items-stretch"
     }>
 
       {fields?.map(field => {
