@@ -5,13 +5,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tsx ./lib/indexFromSchema.js && next build",
     "start": "next start",
     "lint": "eslint",
     "db-local:look": "dotenv -e .env.local -- prisma studio",
     "db-prod:look": "dotenv -e .env.production -- prisma studio",
     "db-local:seed": "dotenv -e .env.local prisma db seed",
-    "postinstall": "prisma generate && tsx ./lib/indexFromSchema.js",
+    "postinstall": "prisma generate",
     "generate_indexFromSchema" : "dotenv -e .env.local -- tsx ./lib/indexFromSchema.js"
   },
   "dependencies": {
