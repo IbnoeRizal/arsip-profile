@@ -6,6 +6,7 @@ import {
   ArrowLeftCircleIcon, 
   ArrowRightCircleIcon,
   Trash2Icon,
+  SearchIcon 
 } from "lucide-react";
 
 /**
@@ -74,7 +75,7 @@ async function getOption(source,signal){
  *  onSubmit?: (data:any)=>void
  * }} props
  */
-export default function DynamicForm({ fields, onSubmit }) {
+export default function DynamicForm({ fields, onSubmit, compact = false }) {
   const [data, setData] = useState({});
 
   /**
@@ -134,15 +135,21 @@ export default function DynamicForm({ fields, onSubmit }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit}  
+      style={compact ? {gridTemplateColumns: `repeat(auto-fit, minmax(min(140px, 100%), 1fr))`, maxWidth: `${fields.filter(f=>f.type!=="hidden").length * 160}px`} : undefined}
+      className={compact ? "grid gap-2 w-full bg-black/50 font-bold p-2 rounded-md text-white" : "flex flex-col gap-4 justify-center items-stretch"
+    }>
+
       {fields?.map(field => {
         if(field.type === "hidden")
           return null;
 
         return(
-        <div key={field.name} className="flex flex-col gap-1">
+        <div key={field.name} className={compact ? "flex flex-col gap-0.5" : "flex flex-col gap-1"}>
         
-          <label className="font-medium" htmlFor={field.name}>{`${field.label} (${(field.required?? true)? "required": "optional"})`}</label>
+          <label className={compact ? "text-xs text-muted-foreground" : "font-medium"} htmlFor={field.name}>
+            {compact ? field.label : `${field.label} (${(field.required?? true)? "required": "optional"})`}
+          </label>
           
 
           {/* SELECT */}
@@ -170,6 +177,7 @@ export default function DynamicForm({ fields, onSubmit }) {
               callback={handleChange}
               field={field}
               key={field.name}
+              compact={compact}
             />
           )}
 
@@ -202,18 +210,24 @@ export default function DynamicForm({ fields, onSubmit }) {
               callback={handleChange}
               field={field}
               key={field.name}
+              compact={compact}
             />
           )}
 
         </div>
       )})}
 
-      <button
-        type="submit"
-        className="dark:bg-blue-600 bg-red-600 text-white rounded p-2"
-      >
-        OK
-      </button>
+      <div className={compact ? "col-span-full flex justify-center" : "self-center"}>
+        <button
+          type="submit"
+          className={compact
+            ? "dark:bg-blue-600 bg-red-600 text-white rounded px-3 py-1 text-sm w-fit"
+            : "dark:bg-blue-600 bg-red-600 text-white rounded p-2"
+          }
+        >
+          {compact ? <SearchIcon className="w-4 h-4"/> : "OK"}
+        </button>
+      </div>
     </form>
   );
 }
@@ -222,7 +236,7 @@ export default function DynamicForm({ fields, onSubmit }) {
  * @param {{field:Field, callback:Function | null | undefined}} param0 
  * 
  */
-function CreateModalSelector({field,callback}) {
+function CreateModalSelector({field,callback,compact = false}) {
 
   const source = field["source"];
 
@@ -312,55 +326,46 @@ function CreateModalSelector({field,callback}) {
   
   if(mode === "modal")
     return(
-      <div className="inset-0 flex flex-col justify-center items-center gap-4 p-3 dark:bg-blue-500/30 bg-red-500/30 rounded-sm">
-        <h2 className="text-white font-bold text-2xl">
-          Select
-        </h2>
-
-        <div 
-          className="flex flex-row justify-end items-end gap-1 size-fit"
+      <div className="relative">
+        {/* Trigger select */}
+        <select 
+          name={field.name} 
+          onClick={(e)=>clickTransform(null, e)}
+          className="border rounded-md border-dotted p-2 outline-none w-full"
+          required={field?.required ?? true}
         >
-          <ThemeButton 
-            height={"auto"} 
-            width={"auto"} 
-            fun={()=>pageFlipper(-1)} 
-            text={<ArrowLeftCircleIcon/>}
-          />
+          <option value={final?.value??""}>{final?.label??""}</option>
+        </select>
 
-          <ThemeButton 
-            height={"auto"} 
-            width={"auto"} 
-            fun={()=>pageFlipper(1)} 
-            text={<ArrowRightCircleIcon />}
-          />
+        {/* Dropdown modal — absolute, tidak menggeser layout */}
+        {mode === "modal" && (
+          <div className={compact
+            ? "absolute z-50 top-full left-0 mt-1 w-56 flex flex-col gap-2 p-2 dark:bg-neutral-800 bg-white border border-black/20 rounded-md shadow-lg text-sm"
+            : "absolute z-50 top-full left-0 mt-1 w-72 flex flex-col gap-4 p-3 dark:bg-neutral-800 bg-white border border-black/20 rounded-md shadow-lg"
+          }>
 
-        </div>
+            {!compact && <h2 className="font-bold text-lg">Select</h2>}
 
+            <div className="flex flex-row justify-end gap-1">
+              <ThemeButton height={"auto"} width={"auto"} fun={()=>pageFlipper(-1)} text={<ArrowLeftCircleIcon className={compact ? "w-4 h-4" : ""}/>}/>
+              <ThemeButton height={"auto"} width={"auto"} fun={()=>pageFlipper(1)} text={<ArrowRightCircleIcon className={compact ? "w-4 h-4" : ""}/>}/>
+            </div>
 
-        <div 
-          className="
-            grid 
-            auto-rows-fr
-            sm:grid-cols-2 
-            place-items-stretch  
-            gap-x-1 gap-y-1.5 
-            text-balance 
-            *:flex
-            *:items-center
-            *:justify-center
-            *:font-bold
-            *:p-3
-            ">
-
-          <div key={"deff"} value="" onClick={(e)=>clickTransform(null,e)} className="bg-red-800/20 hover:bg-red-800/90 size-full rounded-md text-center border-black/70 border">
-            {"Batal"}
+            <div className={compact
+              ? "grid grid-cols-2 gap-1 *:flex *:items-center *:justify-center *:font-medium *:p-1.5 *:text-xs"
+              : "grid auto-rows-fr sm:grid-cols-2 place-items-stretch gap-x-1 gap-y-1.5 *:flex *:items-center *:justify-center *:font-bold *:p-3"
+            }>
+              <div key={"deff"} onClick={(e)=>clickTransform(null,e)} className="bg-red-800/20 hover:bg-red-800/90 rounded-md text-center border-black/70 border cursor-pointer">
+                Batal
+              </div>
+              {data?.map((x)=>(
+                <div key={x.value} onClick={(e)=>clickTransform(x,e)} className="hover:bg-black/15 rounded-md text-center border-black/70 border cursor-pointer">
+                  {x.label}
+                </div>
+              ))}
+            </div>
           </div>
-
-          {data?.map((x)=>{
-            return <div key={x.value} onClick={(e)=>clickTransform(x,e)} className="hover:bg-black/15 size-full rounded-md text-center border-black/70 border ">{x.label}</div>;
-          })}
-
-        </div>      
+        )}
       </div>
     );
 
