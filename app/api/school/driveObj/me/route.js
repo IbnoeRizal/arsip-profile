@@ -23,6 +23,7 @@ export async function GET(request) {
             select:{
                 id:true,
                 link:true,
+                name: true,
                 category:true
             }
         });

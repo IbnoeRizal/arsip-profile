@@ -43,12 +43,13 @@ export async function PATCH(request,context) {
             select:{
                 id:true,
                 link:true,
+                name:true,
                 user:{
                     select:{
                         id:true,
                         name:true
                     }
-                }
+                },
             }
         });
 
