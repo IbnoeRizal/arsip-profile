@@ -17,6 +17,7 @@ export default async function Page({ params }) {
           select:{
             id: true,
             link:true,
+            name:true,
             category:true
           }
         }
