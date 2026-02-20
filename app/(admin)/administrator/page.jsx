@@ -13,6 +13,7 @@ import { MengajarCUD } from "@/components/form/mengajarCUD";
 import { VisiCUD } from "@/components/form/visiCUD";
 import { useEffect } from "react";
 import { MisiCUD } from "@/components/form/misiCUD";
+import { Prisma } from "@/generated/prisma/browser"
 
 const SHOW_CONFIG = Object.freeze([
     Object.freeze({
@@ -22,7 +23,9 @@ const SHOW_CONFIG = Object.freeze([
             source: "/api/user",
         }),
         FORM: UserCUD,
-        TITLE: "List User"
+        TITLE: "List User",
+        TABLENAME: Prisma.ModelName.User
+
     }),
 
     Object.freeze({
@@ -32,7 +35,8 @@ const SHOW_CONFIG = Object.freeze([
             source: "/api/school/visi",
         }),
         FORM: VisiCUD,
-        TITLE: "List Visi"
+        TITLE: "List Visi",
+        TABLENAME: Prisma.ModelName.Visi
     }),
 
     Object.freeze({
@@ -42,7 +46,8 @@ const SHOW_CONFIG = Object.freeze([
             source: "/api/school/misi",
         }),
         FORM: MisiCUD,
-        TITLE: "List Misi"
+        TITLE: "List Misi",
+        TABLENAME: Prisma.ModelName.Misi
     }),
 
     Object.freeze({
@@ -52,7 +57,8 @@ const SHOW_CONFIG = Object.freeze([
             source: "/api/school/driveObj",
         }),
         FORM: DriveObjCUD,
-        TITLE: "List File "
+        TITLE: "List File ",
+        TABLENAME: Prisma.ModelName.DriveObj
     }),
 
     Object.freeze({
@@ -62,7 +68,8 @@ const SHOW_CONFIG = Object.freeze([
             source: "/api/school/Jabatan",
         }),
         FORM: JabatanCUD,
-        TITLE: "List Jabatan "
+        TITLE: "List Jabatan ",
+        TABLENAME: Prisma.ModelName.Jabatan
     }),
 
     Object.freeze({
@@ -72,7 +79,8 @@ const SHOW_CONFIG = Object.freeze([
             source: "/api/school/kelas",
         }),
         FORM: KelasCUD,
-        TITLE: "List Kelas "
+        TITLE: "List Kelas ",
+        TABLENAME: Prisma.ModelName.Kelas
     }),
 
     Object.freeze({
@@ -82,7 +90,8 @@ const SHOW_CONFIG = Object.freeze([
             source: "/api/school/mapel",
         }),
         FORM: MapelCUD,
-        TITLE: "List mapel "
+        TITLE: "List mapel ",
+        TABLENAME: Prisma.ModelName.Mapel
     }),
 
     Object.freeze({
@@ -92,7 +101,8 @@ const SHOW_CONFIG = Object.freeze([
             source: "/api/school/mengajar",
         }),
         FORM: MengajarCUD,
-        TITLE: "List mengajar "
+        TITLE: "List mengajar ",
+        TABLENAME: Prisma.ModelName.Mengajar
     }),
     
 ])
@@ -124,9 +134,10 @@ export default function Page(){
  *      SHOW:{key:string[], labe:string[], source: string},
  *      FORM: UserCUD | DriveObjCUD,
  *      TITLE: string
+ *      TABLENAME: string
  * }} param0 
  */
-function Segment({ SHOW, FORM: Form, TITLE }) {
+function Segment({ SHOW, FORM: Form, TITLE, TABLENAME }) {
     const [selected, setSelect] = useState(null);
     const [modeForm, setModeForm] = useState("CREATE");
 
@@ -165,6 +176,7 @@ function Segment({ SHOW, FORM: Form, TITLE }) {
                         fun={(x) => setSelect(x)}
                         config={SHOW}
                         title={TITLE}
+                        tablename={TABLENAME}
                     />
                 </div>
 

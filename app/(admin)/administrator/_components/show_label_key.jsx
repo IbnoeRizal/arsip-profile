@@ -2,6 +2,7 @@
 import Loader from "@/components/loading";
 import handleParseResponse from "@/lib/fetch/handlefetch";
 import ThemeButton from "@/components/button";
+import { Filterdata } from "@/components/filtersearch";
 
 import { 
     useState, 
@@ -28,9 +29,9 @@ import {
 
 
 /**
- * @param {{config: Config, title: string, fun: Function | null | undefined}} params0
+ * @param {{config: Config, title: string, fun?: Function, tablename:string}} params0
  */
-export default function ShowDataof({config, title, fun}){
+export default function ShowDataof({config, title, fun, tablename}){
 
     // store the current data
     const [data,setData] = useState(
@@ -48,6 +49,8 @@ export default function ShowDataof({config, title, fun}){
         limit: 10,
         total : 10
     });
+
+    const [filter,setFilter] = useState({});
     
     //set the page state, loading or loaded
     const [loading, setLoading] = useState(false);
@@ -81,8 +84,12 @@ export default function ShowDataof({config, title, fun}){
 
         (async ()=>{
             setLoading(true);
-
             const url = new URL(config.source,globalThis?.location.origin);
+            if(filter){
+                for(const param in filter){
+                    url.searchParams.set(param, filter[param]);
+                }
+            }
 
             url.searchParams.set("page", display.page );
             url.searchParams.set("limit", display.limit);
@@ -131,7 +138,7 @@ export default function ShowDataof({config, title, fun}){
         })();
 
         return ()=>controller.abort();
-    },[display.page,display.limit]);
+    },[display.page,display.limit,filter]);
 
     
 
@@ -149,6 +156,7 @@ export default function ShowDataof({config, title, fun}){
     return(
         <section className=" flex flex-col gap-4 p-4 rounded-sm justify-center bg-foreground/20 items-stretch">
             <h1 className="text-3xl font-bold p-1" ref={refHeading}>{title??"List"}</h1>
+            <Filterdata tableName={tablename} callback={(data)=>setFilter(data)} />
             <div className="flex flex-col gap-2 p-2 justify-between items-stretch bg-black/40 rounded-sm">
                 {loading && <div className="inset-0 relative flex justify-center items-center"><Loader /></div>}
                 {

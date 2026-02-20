@@ -7,6 +7,8 @@ import { ArrowBigRight, ArrowBigLeft } from "lucide-react";
 import Status from "@/components/status";
 import Loader from "@/components/loading";
 import { usePathname, useRouter } from "next/navigation";
+import { Filterdata } from "@/components/filtersearch";
+import { Prisma } from "@/generated/prisma/browser";
 
 export default function Karyawan(props) {
     const router = useRouter();
@@ -23,6 +25,8 @@ export default function Karyawan(props) {
         users: [],
         total: 0
     });
+
+    const [filter,setFilter] = useState({});
 
     const status = useRef({
         message:"",
@@ -59,7 +63,22 @@ export default function Karyawan(props) {
         async function getKaryawan() {
             try{
                 setLoading(true)
-                const res = await fetch(`/api/user/?page=${display.page}&limit=${display.limit}`,{signal:controller.signal});
+                const url = new URL(`/api/user/?page=${display.page}&limit=${display.limit}`,window.location.origin)
+                if(filter){
+                    console.log('ini filternya')
+                    console.log(filter)
+                    for(const param in filter){
+                        url.searchParams.set(param, filter[param]);
+                    }
+                }
+                const request = new Request( 
+                    url,
+                    {
+                        method:"GET",
+                        signal:controller.signal,
+                    }
+                );
+                const res = await fetch(request);
                 const result = await res.json();
     
                 if (res.ok && Array.isArray(result?.data)) {
@@ -84,8 +103,7 @@ export default function Karyawan(props) {
         getKaryawan();
 
         return () => controller.abort();
-
-    }, [display.page]);
+    }, [display.page, filter]);
 
     if(loading)
         return(
@@ -98,6 +116,9 @@ export default function Karyawan(props) {
     return (
         <div className="flex flex-col justify-center items-center mt-20">
             <Status {...status.current}/>
+            <div className="container flex flex-col items-stretch">
+                <Filterdata callback={(x)=>setFilter(x)} tableName={Prisma.ModelName.User}/>
+            </div>
             <div className="w-fit self-end flex flex-row justify-end text-white sticky top-1 z-0 gap-2 *:cursor-pointer">
                 <ThemeButton fun={handlePrev} text={(<ArrowBigLeft></ArrowBigLeft>)}/>
                 <ThemeButton fun={handleNext} text={(<ArrowBigRight></ArrowBigRight>)}/>
