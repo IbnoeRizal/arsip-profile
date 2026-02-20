@@ -5,7 +5,7 @@ import { MAPEL_CREATE_BY_ADMIN, MAPEL_DELETE_BY_ADMIN} from "@/lib/authschema";
 import { MergeDynaform } from "./dynamicform/mergerform";
 
 /**@type {{ [key: string]: import("@/components/form/dynamicform/dynamicform").Field }}  */
-const mapelConfig = Object.preventExtensions({
+export const mapelConfig = Object.freeze({
     [Prisma.MapelScalarFieldEnum.id]: {
         type:"hidden",
         as:"input",

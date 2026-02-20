@@ -10,7 +10,7 @@ import { MergeDynaform } from "./dynamicform/mergerform";
  * configuration needed to safely parse schema to fields
  */
 /**@type {{ [key: string]: import("@/components/form/dynamicform/dynamicform").Field }}  */
-const mengajarConfig = Object.preventExtensions({
+export const mengajarConfig = Object.freeze({
     [Prisma.MengajarScalarFieldEnum.id] :{
         type:"hidden",
         as: "input",

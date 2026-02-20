@@ -1,11 +1,11 @@
 "use client"
 import { Prisma } from "@/generated/prisma/browser";
 import schemaToFields from "@/lib/schemaToFields";
-import { KELAS_CREATE_BY_ADMIN, KELAS_DELETE_BY_ADMIN, VISI_CREATE_BY_ADMIN, VISI_DELETE_BY_ADMIN} from "@/lib/authschema";
+import {  VISI_CREATE_BY_ADMIN, VISI_DELETE_BY_ADMIN} from "@/lib/authschema";
 import { MergeDynaform } from "./dynamicform/mergerform";
 
 /**@type {{ [key: string]: import("@/components/form/dynamicform/dynamicform").Field }}  */
-const visiConfig = Object.preventExtensions({
+export const visiConfig = Object.freeze({
     [Prisma.VisiScalarFieldEnum.id]: {
         type:"hidden",
         as:"input",

@@ -5,7 +5,7 @@ import { KELAS_CREATE_BY_ADMIN, KELAS_DELETE_BY_ADMIN} from "@/lib/authschema";
 import { MergeDynaform } from "./dynamicform/mergerform";
 
 /**@type {{ [key: string]: import("@/components/form/dynamicform/dynamicform").Field }}  */
-const kelasConfig = Object.preventExtensions({
+export const kelasConfig = Object.freeze({
     [Prisma.KelasScalarFieldEnum.id]: {
         type:"hidden",
         as:"input",

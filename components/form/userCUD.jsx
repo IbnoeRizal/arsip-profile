@@ -6,7 +6,7 @@ import { MergeDynaform } from "./dynamicform/mergerform";
 import { useCredential } from "@/context/usercredential";
 
 /**@type {{ [key: string]: import("@/components/form/dynamicform/dynamicform").Field }}  */
-const userConfig = Object.preventExtensions({
+export const userConfig = Object.freeze({
     [Prisma.UserScalarFieldEnum.id]: {
         type:"hidden",
         parse:String

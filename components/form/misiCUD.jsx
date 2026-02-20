@@ -5,7 +5,7 @@ import { MISI_UPDATE_BY_ADMIN, MISI_DELETE_BY_ADMIN, MISI_CREATE_BY_ADMIN} from 
 import { MergeDynaform } from "./dynamicform/mergerform";
 
 /**@type {{ [key: string]: import("@/components/form/dynamicform/dynamicform").Field }}  */
-const misiConfig = Object.preventExtensions({
+export const misiConfig = Object.freeze({
     [Prisma.MisiScalarFieldEnum.id]: {
         type:"hidden",
         as:"input",
