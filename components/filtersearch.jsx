@@ -1,7 +1,7 @@
 "use client"
 import J from "@/generated/prisma/indexedSchema.json"
 import DynamicForm from "@/components/form/dynamicform/dynamicform";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { userConfig } from "./form/userCUD";
 import { Prisma } from "@/generated/prisma/browser";
@@ -56,20 +56,31 @@ const filterCONFIG = globalThis.filterCONFIG ?? (function(){
 })();
 
 export function Filterdata({tableName,callback}){
-    const arr = Object.values(filterCONFIG[tableName]).map(x=>x);
+    const arr = useMemo(()=>Object.values(filterCONFIG[tableName]), [tableName]);
     const [visible, setVisible] = useState(false);
 
     return(
-        <search className="flex justify-center items-center">
-            {visible ? 
-                <DynamicForm fields={arr} onSubmit={data=>{callback?.(data); setVisible(false)}} compact={true}/>:
-                <div 
-                    className="flex justify-center items-center p-2 border-dotted border rounded-lg w-full cursor-pointer" 
-                    onClick={()=>setVisible(true)}
-                >
-                Filter
-                </div>
-            }
+        <search className="flex flex-col justify-center items-stretch" onClick={()=>setVisible(prev=>!prev)}>
+           <div 
+                style={{display: visible? "flex": "none"}} 
+                className="flex self-stretch justify-center items-stretch"
+                onClick={e=>{
+                    return e.target !== e.currentTarget && e.stopPropagation()
+                }}
+            >
+                <DynamicForm 
+                    fields={arr} 
+                    onSubmit={data=>{callback?.(data); setVisible(false)}} 
+                    compact={true}
+                />
+           </div>
+            <div 
+                className="flex justify-center items-center p-2 border-dotted border rounded-lg w-full cursor-pointer" 
+                style={{display: !visible? "flex" : "none"}}
+            >
+            Filter
+            </div>
+            
         </search>
     )
 
