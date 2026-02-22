@@ -65,8 +65,6 @@ export default function Karyawan(props) {
                 setLoading(true)
                 const url = new URL(`/api/user/?page=${display.page}&limit=${display.limit}`,window.location.origin)
                 if(filter){
-                    console.log('ini filternya')
-                    console.log(filter)
                     for(const param in filter){
                         url.searchParams.set(param, filter[param]);
                     }
