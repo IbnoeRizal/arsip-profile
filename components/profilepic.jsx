@@ -60,8 +60,8 @@ export default function ProfilePic({
           height={h}
           className="w-full h-full object-cover"
           onError={() => setStatus(STATUS.ERROR)}
-          unoptimized
-          priority={false}
+          priority={!!fun}
+          decoding="async"
         />
       )}
 

@@ -49,7 +49,13 @@ export async function GET(request, context) {
     // thumbnail = paling stabil
     const driveUrl = `https://drive.google.com/uc?id=${fileId}&sz=w1000`;
 
-    const res = await fetch(driveUrl);
+    const res = await fetch(driveUrl,
+      {
+        next:{
+          revalidate: 86400,
+        }
+      }
+    );
 
     if (!res.ok) {
       return NextResponse.json({data:"Drive Fetch Failed"}, { status: st5xx.internalServerError });
@@ -60,7 +66,7 @@ export async function GET(request, context) {
       headers: {
         "Content-Type": res.headers.get("content-type") ?? "text",
         "Cache-Control":
-          "public, s-maxage=360, stale-while-revalidate=86400",
+          "public, s-maxage=3600, stale-while-revalidate=86400",
       },
     });
   } catch (e) {
