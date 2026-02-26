@@ -12,7 +12,7 @@
     "db-prod:look": "dotenv -e .env.production -- prisma studio",
     "db-local:seed": "dotenv -e .env.local prisma db seed",
     "postinstall": "prisma generate",
-    "generate_indexFromSchema" : "dotenv -e .env.local -- tsx ./lib/indexFromSchema.js"
+    "generate_indexFromSchema": "dotenv -e .env.local -- tsx ./lib/indexFromSchema.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
@@ -21,7 +21,7 @@
     "jose": "^6.1.3",
     "lucide-react": "^0.562.0",
     "motion": "^12.27.0",
-    "next": "16.1.3",
+    "next": "^16.1.6",
     "pg": "^8.17.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
