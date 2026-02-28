@@ -5,7 +5,6 @@ import { XSquare } from "lucide-react";
 import ThemeButton from "@/components/button";
 import Lazysegment from "@/components/lazysegment";
 import { useEffect } from "react";
-import { SHOW_CONFIG } from "@/components/dataShow/show_label_key";
 
 export default function Page(){
     useEffect(() => {
