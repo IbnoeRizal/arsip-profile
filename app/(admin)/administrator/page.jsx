@@ -1,111 +1,11 @@
 "use client"
-import ShowDataof from "./_components/show_label_key";
+import  {SHOW_CONFIG, ShowDataof} from "@/components/dataShow/show_label_key";
 import { useState } from "react";
 import { XSquare } from "lucide-react";
 import ThemeButton from "@/components/button";
 import Lazysegment from "@/components/lazysegment";
-import { UserCUD } from "@/components/form/userCUD";
-import { DriveObjCUD } from "@/components/form/driveObjCUD";
-import { JabatanCUD } from "@/components/form/jabatanCUD";
-import { KelasCUD } from "@/components/form/kelasCUD";
-import { MapelCUD } from "@/components/form/mapelCUD";
-import { MengajarCUD } from "@/components/form/mengajarCUD";
-import { VisiCUD } from "@/components/form/visiCUD";
 import { useEffect } from "react";
-import { MisiCUD } from "@/components/form/misiCUD";
-import { Prisma } from "@/generated/prisma/browser"
-
-const SHOW_CONFIG = Object.freeze([
-    Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["name"],
-            source: "/api/user",
-        }),
-        FORM: UserCUD,
-        TITLE: "List User",
-        TABLENAME: Prisma.ModelName.User
-
-    }),
-
-    Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["vision"],
-            source: "/api/school/visi",
-        }),
-        FORM: VisiCUD,
-        TITLE: "List Visi",
-        TABLENAME: Prisma.ModelName.Visi
-    }),
-
-    Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["mision"],
-            source: "/api/school/misi",
-        }),
-        FORM: MisiCUD,
-        TITLE: "List Misi",
-        TABLENAME: Prisma.ModelName.Misi
-    }),
-
-    Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["link"],
-            source: "/api/school/driveObj",
-        }),
-        FORM: DriveObjCUD,
-        TITLE: "List File ",
-        TABLENAME: Prisma.ModelName.DriveObj
-    }),
-
-    Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["title"],
-            source: "/api/school/Jabatan",
-        }),
-        FORM: JabatanCUD,
-        TITLE: "List Jabatan ",
-        TABLENAME: Prisma.ModelName.Jabatan
-    }),
-
-    Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["nama"],
-            source: "/api/school/kelas",
-        }),
-        FORM: KelasCUD,
-        TITLE: "List Kelas ",
-        TABLENAME: Prisma.ModelName.Kelas
-    }),
-
-    Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["nama"],
-            source: "/api/school/mapel",
-        }),
-        FORM: MapelCUD,
-        TITLE: "List mapel ",
-        TABLENAME: Prisma.ModelName.Mapel
-    }),
-
-    Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["user","name"],
-            source: "/api/school/mengajar",
-        }),
-        FORM: MengajarCUD,
-        TITLE: "List mengajar ",
-        TABLENAME: Prisma.ModelName.Mengajar
-    }),
-    
-])
+import { SHOW_CONFIG } from "@/components/dataShow/show_label_key";
 
 export default function Page(){
     useEffect(() => {
@@ -117,7 +17,7 @@ export default function Page(){
 
     return (
         <div className="flex flex-col mt-20 divide-y divide-foreground/20 min-h-full no-anchor">
-            {SHOW_CONFIG.map((item) => (
+            {Object.values(SHOW_CONFIG).map((item) => (
                 <div key={item.TITLE} className="py-8">
                     <Lazysegment>
                         <Segment {...item} />
@@ -129,10 +29,18 @@ export default function Page(){
 }
 
 /**
+ * @typedef {typeof SHOW_CONFIG} ShowConfigType
+ */
+
+/**
+ * @typedef {ShowConfigType[keyof ShowConfigType]["FORM"]} FormType
+ */
+
+/**
  * 
  * @param {{
  *      SHOW:{key:string[], labe:string[], source: string},
- *      FORM: UserCUD | DriveObjCUD,
+ *      FORM: FormType
  *      TITLE: string
  *      TABLENAME: string
  * }} param0 

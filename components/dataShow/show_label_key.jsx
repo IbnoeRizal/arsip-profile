@@ -16,6 +16,9 @@ import {
     ArrowBigRight,
     MoreHorizontal,
 } from "lucide-react";
+import { Prisma } from "@/generated/prisma/browser";
+
+import * as CUD_global from "@/components/form/CUD_global"
 
 /**
  * @typedef {{
@@ -26,12 +29,104 @@ import {
  */
 
 
+export const SHOW_CONFIG = Object.freeze({
+    [Prisma.ModelName.User]: Object.freeze({
+        SHOW : Object.freeze({
+            key:["id"],
+            label:["name"],
+            source: "/api/user",
+        }),
+        FORM: CUD_global.UserCUD,
+        TITLE: "List User",
+        TABLENAME: Prisma.ModelName.User
+
+    }),
+
+    [Prisma.ModelName.Visi]:Object.freeze({
+        SHOW : Object.freeze({
+            key:["id"],
+            label:["vision"],
+            source: "/api/school/visi",
+        }),
+        FORM: CUD_global.VisiCUD,
+        TITLE: "List Visi",
+        TABLENAME: Prisma.ModelName.Visi
+    }),
+
+    [Prisma.ModelName.Misi]:Object.freeze({
+        SHOW : Object.freeze({
+            key:["id"],
+            label:["mision"],
+            source: "/api/school/misi",
+        }),
+        FORM: CUD_global.MisiCUD,
+        TITLE: "List Misi",
+        TABLENAME: Prisma.ModelName.Misi
+    }),
+
+    [Prisma.ModelName.DriveObj]:Object.freeze({
+        SHOW : Object.freeze({
+            key:["id"],
+            label:["link"],
+            source: "/api/school/driveObj",
+        }),
+        FORM: CUD_global.DriveObjCUD,
+        TITLE: "List File ",
+        TABLENAME: Prisma.ModelName.DriveObj
+    }),
+
+    [Prisma.ModelName.Jabatan]:Object.freeze({
+        SHOW : Object.freeze({
+            key:["id"],
+            label:["title"],
+            source: "/api/school/Jabatan",
+        }),
+        FORM: CUD_global.JabatanCUD,
+        TITLE: "List Jabatan ",
+        TABLENAME: Prisma.ModelName.Jabatan
+    }),
+
+    [Prisma.ModelName.Kelas]:Object.freeze({
+        SHOW : Object.freeze({
+            key:["id"],
+            label:["nama"],
+            source: "/api/school/kelas",
+        }),
+        FORM: CUD_global.KelasCUD,
+        TITLE: "List Kelas ",
+        TABLENAME: Prisma.ModelName.Kelas
+    }),
+
+    [Prisma.ModelName.Mapel]:Object.freeze({
+        SHOW : Object.freeze({
+            key:["id"],
+            label:["nama"],
+            source: "/api/school/mapel",
+        }),
+        FORM: CUD_global.MapelCUD,
+        TITLE: "List mapel ",
+        TABLENAME: Prisma.ModelName.Mapel
+    }),
+
+    [Prisma.ModelName.Mengajar]:Object.freeze({
+        SHOW : Object.freeze({
+            key:["id"],
+            label:["user","name"],
+            source: "/api/school/mengajar",
+        }),
+        FORM: CUD_global.MengajarCUD,
+        TITLE: "List mengajar ",
+        TABLENAME: Prisma.ModelName.Mengajar
+    }),
+    
+});
+
 
 
 /**
  * @param {{config: Config, title: string, fun?: Function, tablename:string}} params0
  */
-export default function ShowDataof({config, title, fun, tablename}){
+export function ShowDataof({config, title, fun, tablename}){
 
     // store the current data
     const [data,setData] = useState(
