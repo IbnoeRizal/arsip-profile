@@ -2,16 +2,17 @@
 import J from "@/generated/prisma/indexedSchema.json"
 import DynamicForm from "@/components/form/dynamicform/dynamicform";
 import { useMemo, useState } from "react";
-
-import { userConfig } from "./form/userCUD";
 import { Prisma } from "@/generated/prisma/browser";
-import { driveConfig } from "./form/driveObjCUD";
-import { jabatanConfig } from "./form/jabatanCUD";
-import { kelasConfig } from "./form/kelasCUD";
-import { mapelConfig } from "./form/mapelCUD";
-import { mengajarConfig } from "./form/mengajarCUD";
-import { misiConfig } from "./form/misiCUD";
-import { visiConfig } from "./form/visiCUD";
+import {
+    userConfig,
+    driveConfig,
+    jabatanConfig,
+    kelasConfig,
+    mapelConfig,
+    mengajarConfig,
+    visiConfig,
+    misiConfig,
+} from "./form/CUD_global";
 
 /** 
  * filter configuration from all form jsx
