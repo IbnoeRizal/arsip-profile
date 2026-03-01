@@ -15,8 +15,11 @@
     "generate_indexFromSchema": "dotenv -e .env.local -- tsx ./lib/indexFromSchema.js"
   },
   "dependencies": {
+    "@codemirror/theme-one-dark": "^6.1.3",
+    "@mdxeditor/editor": "^3.52.4",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^6.19.2",
+    "@tailwindcss/typography": "^0.5.19",
     "bcryptjs": "^3.0.3",
     "jose": "^6.1.3",
     "lucide-react": "^0.562.0",
