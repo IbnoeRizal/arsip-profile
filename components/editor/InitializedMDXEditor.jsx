@@ -29,6 +29,7 @@ import {
 import '@mdxeditor/editor/style.css';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { YouTubeButton, YoutubeDirectiveDescriptor } from './directivePlugin/YoutubePlugin';
+import { GdriveButton, GdriveDirectiveDescriptor } from './directivePlugin/Gdrive';
 
 /**
  * @param {{
@@ -45,7 +46,9 @@ export default function InitializedMDXEditor({ editorRef, ...props }) {
   return (
     <MDXEditor
       plugins={[
-        directivesPlugin({directiveDescriptors:[YoutubeDirectiveDescriptor]}),
+        directivesPlugin({
+          directiveDescriptors:[YoutubeDirectiveDescriptor,GdriveDirectiveDescriptor],
+        }),
         headingsPlugin(),
         listsPlugin(),
         quotePlugin(),
@@ -81,6 +84,7 @@ export default function InitializedMDXEditor({ editorRef, ...props }) {
               <CreateLink />
               <InsertTable />
               <YouTubeButton />
+              <GdriveButton/>
               <InsertThematicBreak/>
               <InsertCodeBlock/>
               <DiffSourceToggleWrapper options={["source", 'rich-text']} >
@@ -93,7 +97,7 @@ export default function InitializedMDXEditor({ editorRef, ...props }) {
         })])
       ]}
       className='prose min-w-full'
-      contentEditableClassName="[&_[data-lexical-text='true']]:text-foreground"
+      contentEditableClassName="[&_[data-lexical-text='true']]:text-foreground caret-foreground"
       {...finalProps}
       ref={editorRef}
       editorState={null}

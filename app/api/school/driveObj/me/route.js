@@ -28,7 +28,7 @@ export async function GET(request) {
             }
         });
 
-        return NextResponse.json({data:driveObj},{status:st2xx.ok});
+        return NextResponse.json({data:[driveObj,driveObj.length]},{status:st2xx.ok});
     }catch(e){
         const knownErr = authError(e)?? prismaError(e);
         if(knownErr) return knownErr;
