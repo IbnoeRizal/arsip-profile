@@ -4,12 +4,6 @@ const nextConfig = {
   reactCompiler: true,
   cacheComponents: true,
   images:{
-    remotePatterns:[
-      {
-        protocol:"https",
-        hostname:"**google.com",
-      },
-    ],
     minimumCacheTTL:60*60*4,
   }
 };
