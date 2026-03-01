@@ -157,6 +157,7 @@ export default function DynamicForm({ fields, onSubmit, compact = false }) {
             <select
               className="border rounded-md border-dotted p-2 outline-none "
               onChange={e => handleChange(field, e)}
+              onClick={e=>e.stopPropagation()}
               id={field.name}
               defaultValue=""
               required={field.required ?? true}
@@ -184,6 +185,7 @@ export default function DynamicForm({ fields, onSubmit, compact = false }) {
           {/*TEXTAREA*/}
           {field.as === "textarea" && (
             <textarea  
+              onClick={e=>e.stopPropagation()}
               className="border-b border-dotted dark:border-b-white border-b-black outline-none p-2 focus:border-red-400 dark:focus:border-blue-400"
               id={field.name}
               value={data[field.name] ?? field.default ?? ""}
@@ -200,6 +202,7 @@ export default function DynamicForm({ fields, onSubmit, compact = false }) {
               id={field.name}
               value={data[field.name] ?? field.default ?? ""}
               onChange={e => handleChange(field, e)}
+              onClick={e=>e.stopPropagation()}
               required={field.required ?? true}
             />
           )}

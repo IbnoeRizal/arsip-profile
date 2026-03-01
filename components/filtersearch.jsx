@@ -65,9 +65,6 @@ export function Filterdata({tableName,callback}){
            <div 
                 style={{display: visible? "flex": "none"}} 
                 className="flex self-stretch justify-center items-stretch"
-                onClick={e=>{
-                    return e.target !== e.currentTarget && e.stopPropagation()
-                }}
             >
                 <DynamicForm 
                     fields={arr} 
@@ -78,6 +75,12 @@ export function Filterdata({tableName,callback}){
             <div 
                 className="flex justify-center items-center p-2 border-dotted border rounded-lg w-full cursor-pointer" 
                 style={{display: !visible? "flex" : "none"}}
+                onClick={
+                    (e)=>{
+                        e.stopPropagation();
+                        setVisible(prev=>!prev)
+                    }
+                }
             >
             Filter
             </div>
