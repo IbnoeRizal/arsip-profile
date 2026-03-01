@@ -23,7 +23,7 @@ export default async function Home() {
   return (
     <> 
       <div className="m-auto">
-        <h1 className="text-4xl font-bold text-center mt-20 ml">SDN 2 GEDOG</h1>
+        <h1 className="text-4xl font-bold text-center ml">SDN 2 GEDOG</h1>
       </div>
       <div className="mx-auto w-fit my-auto">
         <Logo width={500} height={500} alt={"Logo Sekolah"} src={"/Logo-Sekolah.svg"}/>

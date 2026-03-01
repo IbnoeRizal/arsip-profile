@@ -42,8 +42,15 @@ async function GetCredential({children}){
   const payload = await getUserFromCookie();
   const list_link = [{link : "/guru&staff", nama: "guru dan staff"}];
 
-  if(payload?.role === Role.ADMIN)
-    list_link.push({link : "/administrator", nama: "administrator"});
+  switch (payload?.role) {
+    case Role.ADMIN:
+      list_link.push({link:"/administrator"});
+    case Role.USER:
+      list_link.push({link:"/post"})
+      break;
+    default:
+      break;
+  }
   
   return (
     <CredentialProvider id={payload?.id} role={payload?.role}>
