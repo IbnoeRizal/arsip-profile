@@ -97,11 +97,6 @@ export async function GET(request,context) {
         const d_idx = arr.findIndex((val)=>val==="d");
 
         if(d_idx){
-            console.log("ini arr");
-            console.log(arr);
-
-            console.log("ini id_x");
-            console.log(d_idx)
             return await getResource(arr[d_idx+1]);
         }
 
