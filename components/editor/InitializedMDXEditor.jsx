@@ -37,7 +37,7 @@ import { GdriveButton, GdriveDirectiveDescriptor } from './directivePlugin/Gdriv
  * } & import('@mdxeditor/editor').MDXEditorProps} props
  * @returns {import('react').JSX.Element}
  */
-export default function InitializedMDXEditor({ editorRef, ...props }) {
+export default function InitializedMDXEditor({ editorRef,readOnly, ...props }) {
   const credential = useCredential();
   const finalProps = {
     ...props,
@@ -101,6 +101,7 @@ export default function InitializedMDXEditor({ editorRef, ...props }) {
       {...finalProps}
       ref={editorRef}
       editorState={null}
+      readOnly={readOnly}
     />
   )
 }

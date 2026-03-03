@@ -11,6 +11,6 @@ const Editor = dynamic(() => import('./InitializedMDXEditor'), {
 // This is what is imported by other components. Pre-initialized with plugins, and ready
 // to accept other props, including a ref.
 
-export function ForwardRefEditor({ref,...props}){
-  return <Editor {...props} editorRef={ref}/>
+export function ForwardRefEditor({ref,readOnly,...props}){
+  return <Editor {...props} editorRef={ref} readOnly={readOnly}/>
 }
