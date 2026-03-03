@@ -237,10 +237,10 @@ export default function DynamicForm({ fields, onSubmit, compact = false }) {
 }
 
 /**
- * @param {{field:Field, callback:Function | null | undefined}} param0 
+ * @param {{field:Field, callback:Function | null | undefined,compact:boolean}} param0 
  * 
  */
-function CreateModalSelector({field,callback,compact = false}) {
+export function CreateModalSelector({field,callback,compact = false}) {
 
   const source = field["source"];
 
