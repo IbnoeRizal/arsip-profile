@@ -227,6 +227,7 @@ export default function DynamicForm({ fields, onSubmit, compact = false }) {
             ? "dark:bg-blue-600 bg-red-600 text-white rounded px-3 py-1 text-sm w-fit"
             : "dark:bg-blue-600 bg-red-600 text-white rounded p-2"
           }
+          onClick={e=>e.stopPropagation()}
         >
           {compact ? <SearchIcon className="w-4 h-4"/> : "OK"}
         </button>
