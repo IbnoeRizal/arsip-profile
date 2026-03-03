@@ -106,14 +106,16 @@ const GdriveButton = () => {
                     setState(prev=>toggle.swap(prev))
                 }}
             >
-                <ShowDataof config={myConfig} tablename={driveconfig.TABLENAME} title={driveconfig.TITLE} fun={data=>{
-                    insertDirective({
-                        name: "gdrive",
-                        type: "leafDirective",
-                        attributes: {id: data.key}
-                    })
-                    setState(prev=>toggle.swap(prev));
-                }} />
+                <div className="size-fit bg-white/20">
+                    <ShowDataof config={myConfig} tablename={driveconfig.TABLENAME} title={driveconfig.TITLE} fun={data=>{
+                        insertDirective({
+                            name: "gdrive",
+                            type: "leafDirective",
+                            attributes: {id: data.key}
+                        })
+                        setState(prev=>toggle.swap(prev));
+                    }} />
+                </div>
             </div>
         }
     </>
