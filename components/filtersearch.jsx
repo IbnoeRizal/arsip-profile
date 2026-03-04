@@ -24,7 +24,11 @@ function filterConfig(king, slave){
     const result = {};
     for(const k in king){
         if(Object.hasOwn(slave, k)){
-            result[k] = {...slave[k], ["name"] : k, ["required"]: false}
+            result[k] = {...slave[k], ["name"] : k, ["required"]: false,};
+            if(slave[k].as === "select" && slave[k].source){
+                result[k].onDelete = "null";
+                result[k].default = null;
+            }
         }
     }
     

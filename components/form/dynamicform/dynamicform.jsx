@@ -24,8 +24,14 @@ import {
  *    getlabel: string[],
  *    getvalue: string[],
  *  }
+ *  onDelete? : "null" | "undefined"
  * }} Field
  */
+
+const TRANSLATE = Object.freeze({
+  ["null"] : null,
+  ["undefined"] : undefined
+})
 
 /**
  * @param {Field['source']} source 
@@ -97,7 +103,13 @@ export default function DynamicForm({ fields, onSubmit, compact = false }) {
     setData(prev => {
       const next = {...prev};
       if(!value){
-        delete next[field.name];
+
+        if(field.onDelete && TRANSLATE[field.onDelete] === value){
+          next[field.name] = TRANSLATE[field.onDelete];
+        }else{
+          delete next[field.name];
+        }
+
         return next;
       }
 
@@ -359,9 +371,27 @@ export function CreateModalSelector({field,callback,compact = false}) {
               ? "grid grid-cols-2 gap-1 *:flex *:items-center *:justify-center *:font-medium *:p-1.5 *:text-xs"
               : "grid auto-rows-fr sm:grid-cols-2 place-items-stretch gap-x-1 gap-y-1.5 *:flex *:items-center *:justify-center *:font-bold *:p-3"
             }>
-              <div key={"deff"} onClick={(e)=>clickTransform(null,e)} className="bg-red-800/20 hover:bg-red-800/90 rounded-md text-center border-black/70 border cursor-pointer">
+              <div key={"deff"} 
+                onClick={(e)=>clickTransform({
+                    value:field.onDelete === "null"? undefined : null
+                  },e)} 
+                  className="bg-red-800/20 hover:bg-red-800/90 rounded-md text-center border-black/70 border cursor-pointer"
+                >
                 Batal
               </div>
+
+              {field.onDelete &&
+                <div key={"find empty"} 
+                  onClick={(e)=>clickTransform({
+                    value:field.onDelete === "null"? null : undefined,
+                    label:"Kosong"
+                    },e)} 
+                    className="bg-red-800/20 hover:bg-red-800/90 rounded-md text-center border-black/70 border cursor-pointer"
+                  >
+                  Cari Kosong
+                </div>
+              }
+
               {data?.map((x)=>(
                 <div key={x.value} onClick={(e)=>clickTransform(x,e)} className="hover:bg-black/15 rounded-md text-center border-black/70 border cursor-pointer">
                   {x.label}
@@ -375,7 +405,8 @@ export function CreateModalSelector({field,callback,compact = false}) {
 
   return(
     <select 
-      name={field.name} 
+      name={field.name}
+      id={field.name} 
       onClick={(e)=>clickTransform(null, e)}
       className="border rounded-md border-dotted p-2 outline-none"
       required={field?.required ?? true}
