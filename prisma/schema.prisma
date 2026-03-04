@@ -117,9 +117,10 @@ model Blog{
   id      String @id @default(cuid())
   link    String @unique
   nama    String
-  idUser  String? 
+  idUser  String 
   idKelas String? 
   idMapel String?
+  eTag    String
 
   user    User? @relation(fields: [idUser], references: [id])
   kelas   Kelas? @relation(fields: [idKelas], references: [id])
