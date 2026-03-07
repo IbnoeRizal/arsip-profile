@@ -49,11 +49,25 @@ function Segment({ SHOW, FORM: Form, TITLE, TABLENAME }) {
     const [modeForm, setModeForm] = useState("CREATE");
 
     function handleMode(mode) {
-        if (!selected) {
-            setModeForm("CREATE");
+        if((selected && mode === "CREATE") || (!selected && mode !== "CREATE")) return;
+        setModeForm(mode);
+    }
+
+    function handleSelect(data){
+        setSelect(prev=>{
+            if(data === prev) return null;
+            return data;
+        });
+        
+        if(data && modeForm === "CREATE" ){
+            setModeForm("UPDATE")
             return;
         }
-        setModeForm(mode);
+
+        if((!data && modeForm !== "CREATE") || selected === data){
+            setModeForm("CREATE")
+            return;
+        }
     }
 
     return (
@@ -69,7 +83,7 @@ function Segment({ SHOW, FORM: Form, TITLE, TABLENAME }) {
                     </span>
                     <XSquare
                         className="stroke-red-500 shrink-0 cursor-pointer"
-                        onClick={() => setSelect(null)}
+                        onClick={() => handleSelect(null)}
                     />
                 </div>
             )}
@@ -80,7 +94,7 @@ function Segment({ SHOW, FORM: Form, TITLE, TABLENAME }) {
                 {/* List */}
                 <div className="flex flex-col gap-3">
                     <ShowDataof
-                        fun={(x) => setSelect(x)}
+                        fun={handleSelect}
                         config={SHOW}
                         title={TITLE}
                         tablename={TABLENAME}
@@ -89,10 +103,31 @@ function Segment({ SHOW, FORM: Form, TITLE, TABLENAME }) {
 
                 {/* Form */}
                 <div className="flex flex-col gap-3 p-3 rounded-md bg-black/20">
-                    <div className="flex gap-2 justify-center">
-                        <ThemeButton text="CREATE" fun={() => handleMode("CREATE")} />
-                        <ThemeButton text="UPDATE" fun={() => handleMode("UPDATE")} />
-                        <ThemeButton text="DELETE" fun={() => handleMode("DELETE")} />
+                    <div className="flex gap-2 justify-center sticky top-0">
+                        <div 
+                            className={`
+                                size-fit 
+                                rounded-md 
+                                [&>button]:rounded-md ${modeForm === 'CREATE' ? '[&>button]:bg-black [&>button]:text-white' : ''}`
+                        }>
+                            <ThemeButton text="CREATE" fun={() => handleMode("CREATE")} />
+                        </div>
+                        <div 
+                            className={`
+                                size-fit 
+                                rounded-md 
+                                [&>button]:rounded-md ${modeForm === 'UPDATE' ? '[&>button]:bg-black [&>button]:text-white' : ''}`
+                        }>
+                            <ThemeButton text="UPDATE" fun={() => handleMode("UPDATE")} />
+                        </div>
+                        <div 
+                            className={`
+                                size-fit 
+                                rounded-md 
+                                [&>button]:rounded-md ${modeForm === 'DELETE' ? '[&>button]:bg-black [&>button]:text-white' : ''}`
+                        }>
+                            <ThemeButton text="DELETE" fun={() => handleMode("DELETE")} />
+                        </div>
                     </div>
 
                     <div className="p-2 rounded-md bg-black/10">
