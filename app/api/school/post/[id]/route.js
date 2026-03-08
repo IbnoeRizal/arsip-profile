@@ -6,7 +6,7 @@ import { st2xx, st4xx, st5xx } from "@/lib/responseCode";
 import { Role } from "@/generated/prisma/enums";
 import { NextResponse } from "next/server";
 import { handleUpload } from "@vercel/blob/client";
-import { get } from "@vercel/blob";
+import { BLOB_GET_RAW_BY_URL } from "@/lib/server_cache/cache_tags_name";
 
 const CALLBACK_BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? `https://${process.env.VERCEL_URL}`;
 
@@ -29,9 +29,9 @@ export async function GET(request, context) {
             }
         });
 
-        const { stream, headers, blob } = await get(blogdata.link, { access: 'public' });
+        const result = await BLOB_GET_RAW_BY_URL.getBlog(blogdata.link);
         
-        return new NextResponse(stream, { headers, status: st2xx.ok });
+        return new NextResponse(result.body, { headers:result.headers, status: st2xx.ok });
 
     } catch (e) {
         const knownErr = authError(e) ?? prismaError(e);
@@ -108,6 +108,8 @@ export async function POST(request,context) {
                         id
                     }
                 })
+ 
+                BLOB_GET_RAW_BY_URL.revalidate(blob.url);
             }
 
         })

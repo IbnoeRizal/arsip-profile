@@ -10,6 +10,7 @@ import { Prisma } from "@/generated/prisma/browser";
 import { handleUpload } from "@vercel/blob/client";
 import { del } from "@vercel/blob";
 import { filterQuery } from "@/lib/filterQuery";
+import { BLOB_GET_RAW_BY_URL } from "@/lib/server_cache/cache_tags_name";
 
 const CALLBACK_BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? `https://${process.env.VERCEL_URL}`;
 
@@ -155,6 +156,8 @@ export async function DELETE(request) {
                 id:verified.data.id
             },
         });
+
+        BLOB_GET_RAW_BY_URL.revalidate(blogdata.link);
 
         return NextResponse.json({data:"blog deleted"},{status:st2xx.ok});
 

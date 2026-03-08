@@ -67,7 +67,7 @@ export async function PATCH(request) {
             }
         })
 
-        USER_GET_BY_ID.revalidate();
+        USER_GET_BY_ID.revalidate(id);
         return NextResponse.json({data:user},{status:st2xx.ok});
     
     }catch(e){

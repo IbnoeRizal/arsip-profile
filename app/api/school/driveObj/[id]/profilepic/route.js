@@ -35,6 +35,7 @@ export async function GET(request, context) {
     const { id } = await context.params;
 
     const profilepic = await PROFLE_PIC.getProfilePic(id);
+    console.log({link:profilepic?.link})
 
     if (!profilepic?.link) {
       return NextResponse.json({data:"Not Found"}, { status: st4xx.notFound });

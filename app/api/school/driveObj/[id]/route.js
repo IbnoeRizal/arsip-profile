@@ -53,7 +53,7 @@ export async function PATCH(request,context) {
             }
         });
 
-        PROFLE_PIC.revalidate();
+        PROFLE_PIC.revalidate(id);
         return NextResponse.json({data:driveObj},{status:st2xx.ok});
 
     }catch(e){
