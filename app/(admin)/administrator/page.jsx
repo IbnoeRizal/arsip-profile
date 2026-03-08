@@ -17,7 +17,7 @@ export default function Page(){
     return (
         <div className="flex flex-col mt-20 divide-y divide-foreground/20 min-h-full no-anchor">
             {Object.values(SHOW_CONFIG).map((item) => (
-                <div key={item.TITLE} className="py-8">
+                <div key={item.TITLE} className="py-8 min-w-90">
                     <Lazysegment>
                         <Segment {...item} />
                     </Lazysegment>
@@ -89,7 +89,7 @@ function Segment({ SHOW, FORM: Form, TITLE, TABLENAME }) {
             )}
 
             {/* ===== Grid Area ===== */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-6 *:min-w-80">
                 
                 {/* List */}
                 <div className="flex flex-col gap-3">
@@ -131,7 +131,7 @@ function Segment({ SHOW, FORM: Form, TITLE, TABLENAME }) {
                     </div>
 
                     <div className="p-2 rounded-md bg-black/10">
-                        <Form id={selected?.key} option={modeForm} />
+                        <Form id={selected?.key??''} option={modeForm} default={selected?.details}/>
                     </div>
                 </div>
             </div>
