@@ -77,11 +77,13 @@ async function getOption(source,signal){
 
 /**
  * @param {{
- *  fields: Field[]
- *  onSubmit?: (data:any)=>void
+ *  fields: Field[],
+ *  onSubmit?: (data:any)=>void,
+ *  compact:boolean,
+ *  children: import("react").ReactNode
  * }} props
  */
-export default function DynamicForm({ fields, onSubmit, compact = false }) {
+export default function DynamicForm({ fields, onSubmit, compact = false ,children}) {
   const [data, setData] = useState({});
 
   /**
@@ -122,9 +124,14 @@ export default function DynamicForm({ fields, onSubmit, compact = false }) {
   }
   
   useEffect(()=>{
+    const tempDefault = {};
+
     for(const field of fields){
-      field.default && setData(prev=>({...prev, [field.name]: field.default}));
+      if(field.default) tempDefault[field.name] = field.default;
     }
+
+    setData(tempDefault);
+
   },[fields])
 
   /**
@@ -231,7 +238,7 @@ export default function DynamicForm({ fields, onSubmit, compact = false }) {
 
         </div>
       )})}
-
+      {children}
       <div className={compact ? "col-span-full flex justify-center" : "self-center"}>
         <button
           type="submit"
