@@ -12,6 +12,7 @@ import {
     mengajarConfig,
     visiConfig,
     misiConfig,
+    blogConfig
 } from "./form/CUD_global";
 
 /** 
@@ -45,6 +46,7 @@ const grouping = Object.freeze({
     [Prisma.ModelName.Mengajar] : mengajarConfig,
     [Prisma.ModelName.Visi] : visiConfig,
     [Prisma.ModelName.Misi] : misiConfig,
+    [Prisma.ModelName.Blog] : blogConfig
 })
 
 /**@type {Readonly<Record<string,import("@/components/form/dynamicform/dynamicform").Field>>} */

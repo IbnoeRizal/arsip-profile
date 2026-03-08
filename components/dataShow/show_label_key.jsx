@@ -19,6 +19,7 @@ import {
 import { Prisma } from "@/generated/prisma/browser";
 
 import * as CUD_global from "@/components/form/CUD_global"
+import { sourceOfTruth } from "./sourceEndpoint";
 
 /**
  * @typedef {{
@@ -31,11 +32,7 @@ import * as CUD_global from "@/components/form/CUD_global"
 
 export const SHOW_CONFIG = Object.freeze({
     [Prisma.ModelName.User]: Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["name"],
-            source: "/api/user",
-        }),
+        SHOW : sourceOfTruth.User,
         FORM: CUD_global.UserCUD,
         TITLE: "List User",
         TABLENAME: Prisma.ModelName.User
@@ -43,81 +40,60 @@ export const SHOW_CONFIG = Object.freeze({
     }),
 
     [Prisma.ModelName.Visi]:Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["vision"],
-            source: "/api/school/visi",
-        }),
+        SHOW : sourceOfTruth.Visi,
         FORM: CUD_global.VisiCUD,
         TITLE: "List Visi",
         TABLENAME: Prisma.ModelName.Visi
     }),
 
     [Prisma.ModelName.Misi]:Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["mision"],
-            source: "/api/school/misi",
-        }),
+        SHOW :sourceOfTruth.Misi,
         FORM: CUD_global.MisiCUD,
         TITLE: "List Misi",
         TABLENAME: Prisma.ModelName.Misi
     }),
 
     [Prisma.ModelName.DriveObj]:Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["link"],
-            source: "/api/school/driveObj",
-        }),
+        SHOW : sourceOfTruth.DriveObj,
         FORM: CUD_global.DriveObjCUD,
         TITLE: "List File ",
         TABLENAME: Prisma.ModelName.DriveObj
     }),
 
     [Prisma.ModelName.Jabatan]:Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["title"],
-            source: "/api/school/Jabatan",
-        }),
+        SHOW : sourceOfTruth.Jabatan,
         FORM: CUD_global.JabatanCUD,
         TITLE: "List Jabatan ",
         TABLENAME: Prisma.ModelName.Jabatan
     }),
 
     [Prisma.ModelName.Kelas]:Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["nama"],
-            source: "/api/school/kelas",
-        }),
+        SHOW : sourceOfTruth.Kelas,
         FORM: CUD_global.KelasCUD,
         TITLE: "List Kelas ",
         TABLENAME: Prisma.ModelName.Kelas
     }),
 
     [Prisma.ModelName.Mapel]:Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["nama"],
-            source: "/api/school/mapel",
-        }),
+        SHOW : sourceOfTruth.Mapel,
         FORM: CUD_global.MapelCUD,
         TITLE: "List mapel ",
         TABLENAME: Prisma.ModelName.Mapel
     }),
 
     [Prisma.ModelName.Mengajar]:Object.freeze({
-        SHOW : Object.freeze({
-            key:["id"],
-            label:["user","name"],
-            source: "/api/school/mengajar",
-        }),
+        SHOW : sourceOfTruth.Mengajar,
         FORM: CUD_global.MengajarCUD,
         TITLE: "List mengajar ",
         TABLENAME: Prisma.ModelName.Mengajar
     }),
+
+    [Prisma.ModelName.Blog] : Object.freeze({
+        SHOW: sourceOfTruth.Blog,
+        FORM: CUD_global.BlogCUD,
+        TITLE: "list blogpost",
+        TABLENAME: Prisma.ModelName.Blog
+    })
     
 });
 
@@ -205,6 +181,7 @@ export function ShowDataof({config, title, fun, tablename}){
                     return;
 
                 const [listdata, total] = body.data;
+                console.table(listdata);
 
                 setDisplay(prev=>({...prev,total}));
                 
@@ -321,7 +298,7 @@ function GetDetails({ item }) {
                     <span className="text-foreground/60 min-w-8 break-all">
                         [{i}]
                     </span>
-                    <div className="flex-1 break-all">
+                    <div className="flex-1 break-all min-w-0">
                         {contain}
                     </div>
                 </div>
@@ -347,7 +324,7 @@ function GetDetails({ item }) {
                         {key}
                     </span>
                     <span className="">:</span>
-                    <div className="flex-1 break-all">
+                    <div className="flex-1 break-all min-w-0">
                         {contain}
                     </div>
                 </div>

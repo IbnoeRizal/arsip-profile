@@ -8,3 +8,4 @@ export * from "./mengajarCUD";
 export * from "./misiCUD";
 export * from "./userCUD";
 export * from "./visiCUD";
+export * from "./blog_CUD";
