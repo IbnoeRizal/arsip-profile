@@ -100,7 +100,7 @@ export default function InitializedMDXEditor({ editorRef,readOnly, ...props }) {
       contentEditableClassName="[&_[data-lexical-text='true']]:text-foreground caret-foreground"
       {...finalProps}
       ref={editorRef}
-      editorState={null}
+      markdown={props.markdown || '/n'}
       readOnly={readOnly}
     />
   )
