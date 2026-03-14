@@ -54,6 +54,6 @@ export const sourceOfTruth = Object.freeze({
     [TABLE.Blog]: Object.freeze({
         key : Object.freeze(["id"]),
         label: Object.freeze(["nama"]),
-        source: "api/school/post"
+        source: "/api/school/post"
     })
 })
