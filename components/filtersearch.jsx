@@ -79,7 +79,7 @@ export function Filterdata({tableName,callback}){
                 />
            </div>
             <div 
-                className="flex justify-center items-center p-2 border-dotted border rounded-lg w-full cursor-pointer" 
+                className="flex justify-center items-center p-2 border rounded-full w-full cursor-pointer bg-red-600/10 dark:bg-blue-600/10 text-shadow-background" 
                 style={{display: !visible? "flex" : "none"}}
                 onClick={
                     (e)=>{
