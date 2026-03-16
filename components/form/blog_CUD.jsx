@@ -40,15 +40,15 @@ export const blogConfig = Object.preventExtensions({
         parse: String,
     },
 
-    [Prisma.BlogScalarFieldEnum.link]: {
-        label : "Link",
-        as: "input",
-        type: "url",
-        parse: String,
-    },
+    // [Prisma.BlogScalarFieldEnum.link]: {
+    //     label : "Link",
+    //     as: "input",
+    //     type: "url",
+    //     parse: String,
+    // },
 
     [Prisma.BlogScalarFieldEnum.idUser]: {
-        label : "User",
+        label : "Penulis",
         as: "select",
         source : {
             getlabel: sourceOfTruth.User.label,
@@ -88,7 +88,7 @@ export const blogConfig = Object.preventExtensions({
 
 const STATUS_KEY_REACT = "blog_cud";
 
-const {createdAt,updatedAt, ...blogItems} = Prisma.BlogScalarFieldEnum;
+const {createdAt,updatedAt,link, ...blogItems} = Prisma.BlogScalarFieldEnum;
 
 //verification
 for(const item in blogItems){
