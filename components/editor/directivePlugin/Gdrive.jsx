@@ -1,3 +1,4 @@
+'use client'
 import {
     usePublisher,
     useMdastNodeUpdater,
@@ -6,7 +7,7 @@ import {
 import { FolderClosed } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import {SHOW_CONFIG,ShowDataof} from "@/components/dataShow/show_label_key";
-import DynamicForm from "@/components/form/dynamicform/dynamicform";
+import { createPortal } from "react-dom";
 
 
 /**
@@ -100,23 +101,24 @@ const GdriveButton = () => {
                     }
                 }
             ><FolderClosed/></div>:
-            <div className="inset-0 fixed bg-black/90 flex flex-col justify-center items-center"
-                onClick={(e)=>{
-                    e.target === e.currentTarget && e.preventDefault();
-                    setState(prev=>toggle.swap(prev))
-                }}
-            >
-                <div className="size-fit bg-white/20">
-                    <ShowDataof config={myConfig} tablename={driveconfig.TABLENAME} title={driveconfig.TITLE} fun={data=>{
-                        insertDirective({
-                            name: "gdrive",
-                            type: "leafDirective",
-                            attributes: {id: data.key}
-                        })
-                        setState(prev=>toggle.swap(prev));
-                    }} />
+            createPortal(
+                <div className="inset-0 fixed bg-black/90 flex flex-col justify-center items-center"
+                    onClick={(e)=>{
+                        e.target === e.currentTarget && setState(prev=>toggle.swap(prev));
+                    }}
+                >
+                    <div className="size-fit bg-white/40 max-h-screen overflow-y-auto">
+                        <ShowDataof config={myConfig} tablename={driveconfig.TABLENAME} title={driveconfig.TITLE} fun={data=>{
+                            insertDirective({
+                                name: "gdrive",
+                                type: "leafDirective",
+                                attributes: {id: data.key}
+                            })
+                            setState(prev=>toggle.swap(prev));
+                        }} />
+                    </div>
                 </div>
-            </div>
+            ,document.body)
         }
     </>
     )
