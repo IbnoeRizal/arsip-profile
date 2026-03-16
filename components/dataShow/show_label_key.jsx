@@ -236,9 +236,7 @@ export function ShowDataof({config, title, fun, tablename}){
                        <div
                         key={item.key}
                         onClick={() => fun?.(item)}
-                        className="p-3 rounded-sm bg-black/40 text-white
-                                    hover:bg-foreground/90 hover:text-background
-                                    active:bg-emerald-300"
+                        className="p-3 rounded-sm bg-black/40 text-white hover:bg-foreground/90 hover:text-background active:bg-emerald-300"
                         >
                             <div className="flex items-start gap-2">
                                 <span className="flex-1 min-w-0 break-all whitespace-normal line-clamp-1">
@@ -277,7 +275,7 @@ export function ShowDataof({config, title, fun, tablename}){
     
 }
 
-function GetDetails({ item }) {
+export function GetDetails({ item }) {
     if (!item) return null;
     const details = [];
 
@@ -333,9 +331,7 @@ function GetDetails({ item }) {
     }
 
     return (
-        <div className="pl-3
-                        flex flex-col gap-1
-                        bg-foreground/5 rounded-sm">
+        <div className="pl-3 flex flex-col gap-1 bg-foreground/5 rounded-sm">
             {details}
         </div>
     );
