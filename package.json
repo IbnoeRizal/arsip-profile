@@ -26,9 +26,13 @@
     "lucide-react": "^0.562.0",
     "motion": "^12.27.0",
     "next": "^16.1.6",
+    "next-mdx-remote": "^6.0.0",
     "pg": "^8.17.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "remark-directive": "^4.0.0",
+    "remark-gfm": "^4.0.1",
+    "unist-util-visit": "^5.1.0",
     "zod": "^4.3.5"
   },
   "devDependencies": {
