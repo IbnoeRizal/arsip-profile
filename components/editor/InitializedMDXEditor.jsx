@@ -24,7 +24,9 @@ import {
   directivesPlugin,
   codeBlockPlugin,
   codeMirrorPlugin,
-  InsertCodeBlock
+  InsertCodeBlock,
+  frontmatterPlugin,
+  InsertFrontmatter
 } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css';
 import { oneDark } from '@codemirror/theme-one-dark';
@@ -59,6 +61,7 @@ export default function InitializedMDXEditor({ editorRef,readOnly, ...props }) {
         diffSourcePlugin(),
         tablePlugin(),
         codeBlockPlugin({ defaultCodeBlockLanguage: 'py' }),
+        frontmatterPlugin(),
         codeMirrorPlugin({
           autoLoadLanguageSupport:true,
           codeBlockLanguages: {
@@ -87,7 +90,8 @@ export default function InitializedMDXEditor({ editorRef,readOnly, ...props }) {
               <GdriveButton/>
               <InsertThematicBreak/>
               <InsertCodeBlock/>
-              <DiffSourceToggleWrapper options={["source", 'rich-text']} >
+              <InsertFrontmatter/>
+              <DiffSourceToggleWrapper options={["source", 'rich-text','diff']} >
                 {null}
               </DiffSourceToggleWrapper>
             </>
