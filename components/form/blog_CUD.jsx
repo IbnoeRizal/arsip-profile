@@ -220,7 +220,7 @@ export function BlogCUD({option,id,skip,fun,default:defaultData}){
 
                     const blob = new Blob([finalMd],{type:"text/markdown"});
 
-                    const result = await upload(defaultData?.nama ?? `${data.nama}.md`,blob,{
+                    const result = await upload(`${data.nama}.md` ?? `${defaultData?.nama}.md`,blob,{
                         access:"public",
                         handleUploadUrl: url,
                         abortSignal: signal,
