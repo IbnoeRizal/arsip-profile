@@ -2,6 +2,7 @@
 const nextConfig = {
   /* config options here */
   reactCompiler: true,
+  transpilePackages: ['next-mdx-remote'],
   cacheComponents: true,
   images:{
     minimumCacheTTL:60*60*4,
