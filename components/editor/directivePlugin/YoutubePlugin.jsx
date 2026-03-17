@@ -8,7 +8,7 @@ import {
 } from "@mdxeditor/editor";
 import { YoutubeIcon } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-
+import { Riframe } from "@/components/resizableiframe";
 
 /**
  * @type {import('@mdxeditor/editor').DirectiveDescriptor}
@@ -54,18 +54,16 @@ const YoutubeDirectiveDescriptor = {
     },[])
 
   return (
-    <div 
-      style={{ resize: 'horizontal', overflow: 'hidden', width: '560px', minWidth: '200px', maxWidth: '100%', paddingRight:10}}
-      ref={refer}
-    >
-      <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
-        <iframe
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-          src={`https://www.youtube.com/embed/${mdastNode?.attributes?.id}`}
-          allowFullScreen
-        />
-      </div>
-    </div>
+    <Riframe 
+      sizeref={refer} 
+      src={`https://www.youtube.com/embed/${mdastNode?.attributes?.id}`}
+      props={{
+        allowFullScreen:true,
+        className:"aspect-video",
+        title:"YouTube video player",
+        referrerPolicy:"strict-origin-when-cross-origin",
+      }}
+    />
   )
 }
 }

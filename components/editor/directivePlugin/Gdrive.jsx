@@ -8,6 +8,7 @@ import { FolderClosed } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import {SHOW_CONFIG,ShowDataof} from "@/components/dataShow/show_label_key";
 import { createPortal } from "react-dom";
+import { Riframe } from "@/components/resizableiframe";
 
 
 /**
@@ -53,18 +54,13 @@ const GdriveDirectiveDescriptor = {
         },[])
 
         return (
-            <div 
-            style={{ resize: 'horizontal', overflow: 'hidden', width: '560px', minWidth: '200px', maxWidth: '100%', paddingRight:10}}
-            ref={refer}
-            >
-            <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
-                <iframe
-                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-                src={`${window.location.origin}/api/school/driveObj/${mdastNode?.attributes?.id}`}
-                allowFullScreen
-                />
-            </div>
-            </div>
+            <Riframe 
+                sizeref={refer}
+                src={`/api/school/driveObj/${mdastNode?.attributes?.id}`}
+                props={{
+                    allowFullScreen:true
+                }}
+            />
         )
     }
 }
