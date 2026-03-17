@@ -2,6 +2,7 @@
 import { useKeyboardPresece } from "@/customHooks/keyboard_detector";
 import { BlogCUD } from "@/components/form/blog_CUD";
 import { useCredential } from "@/context/usercredential";
+import { useSearchParams } from "next/navigation";
 
 const keyword = ["kegunaan","contoh pemakaian"];
 
@@ -35,6 +36,13 @@ const shortcut = Object.freeze({
 export default function page(){
     const hasKeyboard = useKeyboardPresece();
     const credential = useCredential();
+    const searchParams = useSearchParams();
+
+    const params = {
+        id: searchParams.get("id"),
+        option : searchParams.get("option"),
+    }
+    
 
     return(
     <>
@@ -49,7 +57,12 @@ export default function page(){
         <section className="mt-16 mx-4 max-w-full flex flex-col gap-4 justify-around items-center">
             <h2 className="text-3xl text-left w-full font-bold">Editor</h2>
             <div className="max-w-full self-stretch flex flex-col items-stretch *:w-full">
-                <BlogCUD skip={["link", "idUser"]} default={{nama:"draft", idUser:credential.id}} option={"CREATE"}/>
+                <BlogCUD 
+                    id={params.id} 
+                    skip={["link", "idUser"]} 
+                    default={{nama:"draft", idUser:credential.id}} 
+                    option={params.option ?? "CREATE"}
+                />
             </div>
         </section>
 
