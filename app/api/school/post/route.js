@@ -38,11 +38,12 @@ export async function GET(request) {
                         select:{name:true}
                     },
                     nama:true,
-                    eTag:true,
+                    updatedAt:true
                 },
                 take:limit,
                 skip:page*limit,
-                where
+                where,
+                orderBy:{updatedAt:"desc"}
             }),
             prisma.blog.count({where})
         ]);

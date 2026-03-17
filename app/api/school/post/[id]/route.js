@@ -25,13 +25,28 @@ export async function GET(request, context) {
                 id
             },
             select: {
-                link: true
+                link: true,
+                eTag:true
             }
         });
 
+        const isETagMatch = request.headers.get("if-none-match") === blogdata.eTag;
+        if (isETagMatch) {
+            return new NextResponse(null, {
+                status: 304,
+                headers: {
+                    "ETag": blogdata.eTag,
+                    "cache-control": "max-age=600, stale-while-revalidate=86400"
+                }
+            });
+        }
+
         const result = await BLOB_GET_RAW_BY_URL.getBlog(blogdata.link);
+        const headers = result.headers;
+        headers.set("cache-control", "max-age=600, stale-while-revalidate=86400");
         
-        return new NextResponse(result.body, { headers:result.headers, status: st2xx.ok });
+        headers.set("ETag", blogdata.eTag);
+        return new NextResponse(result.body,{headers, status: st2xx.ok });
 
     } catch (e) {
         const knownErr = authError(e) ?? prismaError(e);
