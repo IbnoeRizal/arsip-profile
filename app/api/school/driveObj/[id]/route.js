@@ -80,7 +80,7 @@ export async function GET(request,context) {
             context.params
         ])
 
-        requireRole(payload,[Role.ADMIN,Role.USER]);
+        // requireRole(payload,[Role.ADMIN,Role.USER]);
         
         const driveObj = await prisma.driveObj.findFirst({
             where:{id},
@@ -91,7 +91,7 @@ export async function GET(request,context) {
             }
         });
         
-        if(driveObj.userId !== payload.id) return NextResponse.json({data:"Forbidden"},{status:st4xx.forbidden});
+        // if(driveObj.userId !== payload.id) return NextResponse.json({data:"Forbidden"},{status:st4xx.forbidden});
 
         const arr = driveObj.link.split('/');
         const d_idx = arr.findIndex((val)=>val==="d");

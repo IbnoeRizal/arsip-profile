@@ -1,3 +1,4 @@
+//@ts-check
 import { BLOB_GET_RAW_BY_URL } from "@/lib/server_cache/cache_tags_name";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { Suspense } from "react";
@@ -8,8 +9,8 @@ import remarkGfm from "remark-gfm";
 import { myDirectivePlugin } from "@/lib/mdx-plugin";
 import { Riframe } from "@/components/resizableiframe";
 import { sourceOfTruth } from "@/components/dataShow/sourceEndpoint";
+import { cache } from "react";
 
-export const metadata = {};
 export default async function Page({params}) {
     const {id} = await params;
 
@@ -46,36 +47,47 @@ const components = {
   ),
 }
 
-async function GetMd({id}) {
-    let source = "not found";
-    try {
-        const mdId = await prisma.blog.findUniqueOrThrow({
-            where:{id},
-            select:{link:true}
-        });
-        
-        const response = await BLOB_GET_RAW_BY_URL.getBlog(mdId.link);
-
-        source = await response.text();
-        
-    } catch (err) {
-        if(process.env.NODE_ENV === "development");
-            console.error(err);
-    }
-
-    const {content,frontmatter} = await compileMDX({
+const getMdData  = cache(async (id) => {
+    const mdId = await prisma.blog.findUniqueOrThrow({
+        where: { id },
+        select: { link: true }
+    });
+    const response = await BLOB_GET_RAW_BY_URL.getBlog(mdId.link);
+    const source = await response.text();
+    
+    return compileMDX({
         source,
-        options:{
-            parseFrontmatter:true,
-            mdxOptions:{
-                remarkPlugins:[remarkGfm,remarkDirective,myDirectivePlugin]
+        options: {
+            parseFrontmatter: true,
+            mdxOptions: {
+                remarkPlugins: [remarkGfm, remarkDirective, myDirectivePlugin]
             }
         },
         components
     });
+});
 
-    metadata.title = frontmatter?.title;
-    metadata.description = frontmatter?.description;
+export async function generateMetadata({params}) {
+    const {id} = await params;
+    try {
+        const { frontmatter } = await getMdData(id);
+        return {
+            title: frontmatter?.title,
+            description: frontmatter?.description,
+        };
+    } catch {
+        return { title: "Not Found", description: "" };
+    }
+}
 
-    return content;
+async function GetMd({ id }) {
+    try {
+        const { content } = await getMdData(id);
+        return content;
+    } catch (err) {
+        if (process.env.NODE_ENV === "development") {
+            console.error(err);
+        }
+        return <p className="inset-0">Not found</p>;
+    }
 }
