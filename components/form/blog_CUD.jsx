@@ -144,18 +144,21 @@ const REQUEST_MODE = Object.freeze({
  * 
  * @returns {import("react").JSX.Element}
  */
-export function BlogCUD({option,id,skip,fun,default:defaultData1}){
-    const defaultData = {...defaultData1};
-    //mulai
-        const [upProgres,setUpProgres] = useState(
+export function BlogCUD({option,id,skip,fun,default:defaultData}){
+    //upload progress
+    const [upProgres,setUpProgres] = useState(
         /**
          * @type {{loaded:number,total:number,percentage:number} | null}
          */
         (null)
     )
+
+    //reference to editor
     const editorRef = useRef(null);
+    //name to session storage key
     const name = "finalMd";
 
+    //callback for reference since ref is invoked twice
     const setEditorRef = useCallback((instance) => {
         if (instance) {
             editorRef.current = instance;
@@ -168,12 +171,19 @@ export function BlogCUD({option,id,skip,fun,default:defaultData1}){
         }
     },[]);
 
+    //stored for later use
+    const fetchedEtag = useRef(null);
+    const needEtag = ["UPDATE","DELETE"].includes(option);
+
     useEffect(()=>{
-        if(option !== "UPDATE" || !id) {
-    
-            editorRef.current?.setMarkdown?.("");
-            return;
-        };
+
+        if(option !== "UPDATE") editorRef.current?.setMarkdown?.("");
+
+        // reset every option/id changed
+        fetchedEtag.current = null;
+
+        if(!needEtag || !id) return;
+        
 
         const controller = new AbortController();
         try{
@@ -181,8 +191,9 @@ export function BlogCUD({option,id,skip,fun,default:defaultData1}){
             fetch(`${sourceOfTruth.Blog.source}/${id}`,{signal:controller.signal}).then(x=>{
                 const etag = x.headers.get("Etag");
                 if(etag){
-                    defaultData.eTag = etag;
+                    fetchedEtag.current = etag;
                 }
+                if(option === "DELETE") return;
                 return x.text();
             }).then(x=>{
                 editorRef.current?.setMarkdown?.(x);
@@ -205,6 +216,10 @@ export function BlogCUD({option,id,skip,fun,default:defaultData1}){
      * @returns {Promise<void>}
      */
     async function send(data,url,method,signal,{info=undefined,loading=undefined}={}){
+        const finalData = {
+            ...data,
+            ...(fetchedEtag.current && needEtag ? {eTag:fetchedEtag.current} : {})
+        }
         if(!window.confirm("Data akan dikirimkan, apakah anda yakin"))
             return;
         
@@ -225,7 +240,7 @@ export function BlogCUD({option,id,skip,fun,default:defaultData1}){
                     }
 
                     const blob = new Blob([finalMd],{type:"text/markdown"});
-                    let pathname = data.nama ?? defaultData?.nama ?? "draft";
+                    let pathname = finalData.nama ?? defaultData?.nama ?? "draft";
                     if(!pathname.endsWith(".md")){
                         pathname += ".md";
                     }
@@ -234,7 +249,7 @@ export function BlogCUD({option,id,skip,fun,default:defaultData1}){
                         handleUploadUrl: url,
                         abortSignal: signal,
                         onUploadProgress:(obj)=>setUpProgres(prev=>({...prev,...obj})),
-                        clientPayload:JSON.stringify(data),
+                        clientPayload:JSON.stringify(finalData),
                     });
 
                     if(info){
@@ -246,7 +261,7 @@ export function BlogCUD({option,id,skip,fun,default:defaultData1}){
                 case "DELETE":
                     const res = await fetch(url,{
                         method,
-                        body:JSON.stringify(data)
+                        body:JSON.stringify(finalData)
                     });
 
                     const body = await handleParseResponse(res);
