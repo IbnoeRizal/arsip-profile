@@ -144,8 +144,8 @@ const REQUEST_MODE = Object.freeze({
  * 
  * @returns {import("react").JSX.Element}
  */
-export function BlogCUD({option,id,skip,fun,default:defaultData}){
-
+export function BlogCUD({option,id,skip,fun,default:defaultData1}){
+    const defaultData = {...defaultData1};
     //mulai
         const [upProgres,setUpProgres] = useState(
         /**
@@ -178,7 +178,13 @@ export function BlogCUD({option,id,skip,fun,default:defaultData}){
         const controller = new AbortController();
         try{
             
-            fetch(`${sourceOfTruth.Blog.source}/${id}`,{signal:controller.signal}).then(x=>x.text()).then(x=>{
+            fetch(`${sourceOfTruth.Blog.source}/${id}`,{signal:controller.signal}).then(x=>{
+                const etag = x.headers.get("Etag");
+                if(etag){
+                    defaultData.eTag = etag;
+                }
+                return x.text();
+            }).then(x=>{
                 editorRef.current?.setMarkdown?.(x);
             });
         }catch(err){
@@ -219,8 +225,11 @@ export function BlogCUD({option,id,skip,fun,default:defaultData}){
                     }
 
                     const blob = new Blob([finalMd],{type:"text/markdown"});
-
-                    const result = await upload(`${data.nama}.md` ?? `${defaultData?.nama}.md`,blob,{
+                    let pathname = data.nama ?? defaultData?.nama ?? "draft";
+                    if(!pathname.endsWith(".md")){
+                        pathname += ".md";
+                    }
+                    const result = await upload(pathname,blob,{
                         access:"public",
                         handleUploadUrl: url,
                         abortSignal: signal,
