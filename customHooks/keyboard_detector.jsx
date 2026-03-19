@@ -8,17 +8,20 @@ function useKeyboardPresece(){
     const [hasKeyboard, setHasKeyboard] = useState(false);
     
     useEffect(()=>{
-        const memo = !!localStorage.getItem(itemname);
-        setHasKeyboard(memo);
-        if(hasKeyboard) return;
+        if(localStorage.getItem(itemname)){
+            setHasKeyboard(true);
+            return;
+        }
 
-        const ref = () => setHasKeyboard(prev=>{
-            localStorage.setItem(itemname, true);
-            setHasKeyboard(true)
-        })
+        const ref = () => {
+            setTimeout(()=>localStorage.setItem(itemname, true),0);
+            requestIdleCallback(()=>{
+                setHasKeyboard(true);
+            })
+        }
         window.addEventListener("keydown",ref,{ once: true });
         
-        return ()=>window.removeEventListener("keydown",ref)
+        return ()=>window.removeEventListener("keydown",ref);
     },[])
 
     return hasKeyboard;
