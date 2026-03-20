@@ -186,23 +186,29 @@ export function BlogCUD({option,id,skip,fun,default:defaultData}){
         
 
         const controller = new AbortController();
-        try{
-            
-            fetch(`${sourceOfTruth.Blog.source}/${id}`,{signal:controller.signal}).then(x=>{
-                const etag = x.headers.get("Etag");
-                if(etag){
+        (async()=>{
+            try{
+                    
+                const res = await fetch(
+                    `${sourceOfTruth.Blog.source}/${id}`,
+                    {signal:controller.signal}
+                );
+
+                const etag = res.headers.get("Etag");
+                if(etag)
                     fetchedEtag.current = etag;
-                }
+                
                 if(option === "DELETE") return;
-                return x.text();
-            }).then(x=>{
-                editorRef.current?.setMarkdown?.(x);
-            });
-        }catch(err){
-            if(err.name === "AbortError")
-                return;
-            console.log(err);
-        }
+
+                const text = await res.text();
+                editorRef.current?.setMarkdown?.(text);
+                
+            }catch(err){
+                if(err.name === "AbortError")
+                    return;
+                console.log(err);
+            }
+        })();
 
         return ()=>controller.abort();
     },[option,id]);
