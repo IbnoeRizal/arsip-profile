@@ -10,12 +10,28 @@ import { myDirectivePlugin } from "@/lib/mdx-plugin";
 import { Riframe } from "@/components/resizableiframe";
 import { sourceOfTruth } from "@/components/dataShow/sourceEndpoint";
 import { cache } from "react";
+import { getUserFromCookie } from "@/lib/auth";
+import { Role } from "@/generated/prisma/browser";
+import { ModifGroupBtn } from "./modif_btn";
 
 export default async function Page({params}) {
     const {id} = await params;
+    const [payload,user] = await Promise.all([
+        getUserFromCookie(),
+        prisma.blog.findUnique({
+            where:{id},
+            select:{
+                idUser:true
+            }
+        })
+    ]);
 
+    /**@type {boolean} */
+    const modifiable = !!payload && (payload?.role === Role.ADMIN || payload?.id === user?.idUser);
+    
     return(
         <article className="prose prose-lg dark:prose-invert max-w-3xl mx-auto px-4 py-8">
+            <ModifGroupBtn editable={modifiable} id={id} />
             <Suspense fallback={<Loading/>}>
                 <GetMd id={id}/>
             </Suspense>
