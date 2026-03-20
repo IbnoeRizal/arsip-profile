@@ -181,7 +181,6 @@ export function ShowDataof({config, title, fun, tablename}){
                     return;
 
                 const [listdata, total] = body.data;
-                console.table(listdata);
 
                 setDisplay(prev=>({...prev,total}));
                 
