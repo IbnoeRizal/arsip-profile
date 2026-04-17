@@ -132,17 +132,18 @@ function User({id,name,email,bio,jabatan,mengajar}){
                 <div className="size-fit flex grow-o last:items-end">
                     <ProfilePic id={id} h={200} w={200} fun={handlePicid}/>
                     <div className="flex flex-row grow-0 items-end justify-center">
-                        
+                       { can_edit?
                         <ThemeButton 
                             fun={()=>setVisibleChild(prev=>!prev)} 
                             text={
                                 visibleChild? 
                                 <XCircleIcon/> :
                                 (
-                                    can_edit? <UserPenIcon/> :
-                                    <LogInIcon />
+                                    <UserPenIcon/>
+                                    // <LogInIcon /> login will be moved to nav
                                 )    
-                            }/>
+                            }/> : null
+                        }
                      
                     </div>
                 </div>
@@ -171,13 +172,14 @@ function User({id,name,email,bio,jabatan,mengajar}){
                 </motion.div>
             }
 
-            {visibleChild && !can_edit &&
+            {/* {visibleChild && !can_edit &&
       
                 <motion.div className="fixed inset-0 size-fit m-auto" drag dragConstraints={boundary}>
                     <Login/>
                 </motion.div>
-            
-            }
+                
+                this will be moved to nav
+            } */}
             
             <div
                 id="identity"
