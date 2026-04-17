@@ -35,7 +35,7 @@ export default function Navbar(props) {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     transition={{ duration :0}}
-                    className="text-white text-base font-bold mx-4 dark:bg-blue-950 bg-red-950 p-2 rounded-md inline-block cursor-pointer"
+                    className="text-white text-base font-bold mx-4 dark:bg-blue-950 bg-red-950 p-2 rounded-md inline-block cursor-pointer text-nowrap"
                 >
                 {link.nama ?? link.link.split("/").at(-1)}
                 </motion.div>
@@ -45,7 +45,7 @@ export default function Navbar(props) {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           transition={{ duration :0}}
-          className="text-white text-base font-bold ml-auto dark:bg-blue-950 bg-red-950 p-2 rounded-md inline-block cursor-pointer"
+          className="text-white text-base font-bold ml-auto dark:bg-blue-950 bg-red-950 p-2 rounded-md inline-block cursor-pointer text-nowrap"
         >
           <Link href="https://perpusgedog-mu.vercel.app" >
             Perpustakaan
