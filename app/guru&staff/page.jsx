@@ -112,7 +112,7 @@ export default function Karyawan(props) {
         )
 
     return (
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-center items-center gap-2.5">
             <Status {...status.current}/>
             <div className="container flex flex-col items-stretch">
                 <Filterdata callback={(x)=>setFilter(x)} tableName={Prisma.ModelName.User}/>
