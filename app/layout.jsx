@@ -40,10 +40,10 @@ export default async function RootLayout({ children }) {
 
 async function GetCredential({children}){
   const payload = await getUserFromCookie();
-  const list_link = ["/karyawan"];
+  const list_link = [{link : "/guru&staff", nama: "guru dan staff"}];
 
   if(payload?.role === Role.ADMIN)
-    list_link.push("/administrator");
+    list_link.push({link : "/administrator", nama: "administrator"});
   
   return (
     <CredentialProvider id={payload?.id} role={payload?.role}>
