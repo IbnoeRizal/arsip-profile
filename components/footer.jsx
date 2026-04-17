@@ -20,8 +20,7 @@ export default function Footer() {
           </motion.h1>
 
           <p className="text-gray-300 text-sm">
-            Website resmi SD Negeri Gedog yang menyediakan informasi sekolah, 
-            layanan administrasi, serta akses perpustakaan digital.
+            Website resmi SD Negeri Gedog yang menyediakan informasi sekolah, guru dan staff.
           </p>
         </div>
 
