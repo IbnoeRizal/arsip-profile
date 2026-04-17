@@ -1,6 +1,7 @@
 'use client'
 import { createContext,useRef,useContext } from "react";
 import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
 
 const BoundContext = createContext(null);
 
@@ -27,6 +28,7 @@ export function BoundaryProvider({children, list_link}){
             <BoundContext.Provider value={refboundary}>
                 {children}
             </BoundContext.Provider>
+            <Footer />
         </div>
     )
 
