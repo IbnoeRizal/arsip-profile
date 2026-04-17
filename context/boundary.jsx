@@ -24,9 +24,9 @@ export function BoundaryProvider({children, list_link}){
 
     return(
         <div ref={refboundary} className="h-full">
-            <div className="mt-20"></div>
             <BoundContext.Provider value={refboundary}>
                 <Navbar links={list_link}/>
+                <div className="mt-20"></div>
                 {children}
             </BoundContext.Provider>
             <Footer />
