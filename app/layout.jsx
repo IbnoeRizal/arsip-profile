@@ -26,7 +26,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overscroll-x-none min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overscroll-x-none min-h-full`}
       >
         <Suspense fallback={<Loading/>}>
           <GetCredential>

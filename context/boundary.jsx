@@ -23,7 +23,7 @@ export function BoundaryProvider({children, list_link}){
 
 
     return(
-        <div ref={refboundary} className="h-full">
+        <div ref={refboundary} className="h-full min-w-78.75">
             <BoundContext.Provider value={refboundary}>
                 <Navbar links={list_link}/>
                 <div className="mt-20"></div>
