@@ -16,11 +16,11 @@ export default function Footer() {
             transition={{ duration: 0.4 }}
             className="text-2xl font-bold mb-3"
           >
-            SDN Gedog
+            SDN 2 Gedog
           </motion.h1>
 
           <p className="text-gray-300 text-sm">
-            Website resmi SD Negeri Gedog yang menyediakan informasi sekolah, guru dan staff.
+            Website resmi SD Negeri 2 Gedog yang menyediakan informasi sekolah, guru dan staff.
           </p>
         </div>
 
@@ -75,7 +75,7 @@ export default function Footer() {
 
       {/* COPYRIGHT */}
       <div className="text-center text-gray-400 text-sm py-4 border-t border-gray-700">
-        © {new Date().getFullYear()} SDN Gedog. All rights reserved.
+        © {new Date().getFullYear()} SDN 2 Gedog. All rights reserved.
       </div>
     </footer>
   );
