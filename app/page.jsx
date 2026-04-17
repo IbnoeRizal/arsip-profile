@@ -40,7 +40,7 @@ export default async function Home() {
       </div>
       <div className="mt-10 min-h-screen bg-[url('/gambar-tentang-sekolah/pemandangan-depan-sekolah.jpg')] bg-cover bg-center flex flex-col items-center justify-center p-3">
 
-        <div className="backdrop-blur-md bg-black/45 p-8 rounded-xl text-white flex flex-col gap-6 w-full max-w-3xl border-white border-2">
+        <div className="backdrop-blur-md bg-black/45 p-8 rounded-xl text-white flex flex-col gap-6 w-full mx-10 border-white border-2">
           
           <h1 className="text-xl font-bold self-start">Tentang Sekolah</h1>
 
