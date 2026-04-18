@@ -1,5 +1,7 @@
 # Memulai
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/IbnoeRizal/arsip-profile)
+
 <div align="center">
 
 -> **[Dokumentasi untuk pengguna](./documentation/USER.md)** <-
